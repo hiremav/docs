@@ -1,0 +1,48 @@
+---
+title: "Ricochet360 Integration: Sync Mav Lead Activity to CRM"
+sidebarTitle: "Ricochet360"
+description: "Connect Mav to Ricochet360 to automatically post lead outcomes and call transfers to your CRM, with per-activity control over what gets sent."
+---
+
+Mav's Ricochet360 integration lets you automatically push lead activity from Mav directly into your Ricochet360 CRM. Once connected, you have granular control over which types of lead outcomes and call transfers are posted — and each activity type routes to its own Ricochet posting URL.
+
+## Setting Up the Integration
+
+<Steps>
+  <Step title="Open Integrations in Mav">
+    In Mav, navigate to **Settings → Integrations** and locate the Ricochet360 integration.
+  </Step>
+  <Step title="Connect the integration">
+    Click **Connect** to authorize the connection between Mav and Ricochet360.
+  </Step>
+  <Step title="Configure lead activity posting">
+    Once connected, toggle on the activity types you want to post and provide the corresponding Ricochet posting URL for each one. You can find your posting URLs inside your Ricochet360 account under **Lead Posting Settings**.
+  </Step>
+  <Step title="Save the configuration">
+    Click **Save** to finalize the connection. Mav will begin posting matching lead activity to Ricochet360 immediately.
+  </Step>
+</Steps>
+
+## Configuration Options
+
+Each activity type can be enabled or disabled independently. When enabled, you supply a dedicated Ricochet posting URL for that activity.
+
+| Setting | What it does |
+|---|---|
+| **Send Unqualified Leads** | Posts leads that did not qualify through Mav |
+| **Send Undeliverables** | Posts leads that Mav was unable to reach |
+| **Send Successful Party Lines (Transfers)** | Posts leads where a live transfer was completed successfully |
+| **Send Qualified Leads** | Posts leads that completed qualification through Mav |
+| **Send Incoming Party Lines (Transfers)** | Posts leads where an inbound transfer was received |
+
+<Tip>
+  Each activity type routes to its own posting URL, so you can direct different outcomes to different campaigns or queues inside Ricochet360.
+</Tip>
+
+## Disconnecting
+
+To remove the integration, scroll to the bottom of the **Configuration** tab and click **Disconnect**.
+
+<Warning>
+  Disconnecting immediately stops all lead activity from being posted to Ricochet360. Reconnecting requires you to re-enter your posting URLs.
+</Warning>

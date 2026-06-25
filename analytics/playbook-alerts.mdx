@@ -1,0 +1,68 @@
+---
+title: "Playbook Alerts: Track Intent and Outcome Rate Changes"
+sidebarTitle: "Playbook Alerts"
+description: "Learn how to configure Mav Playbook Alerts to trigger webhook notifications when positive intent or outcome rates cross a defined threshold."
+---
+
+Mav's Playbook Alerts let you programmatically respond to changes in positive intent or outcome rates, broken down by source or date. When a metric crosses your defined threshold, Mav sends a JSON payload to a webhook URL of your choice — so you can automate follow-up actions in any downstream system.
+
+## Accessing Playbook Alerts
+
+Navigate to **Playbooks** in Mav, then click the **Alerts** button on the playbook you want to monitor. To add a new alert, click **New Alert**.
+
+## Configuring an Alert
+
+Each alert has the following options:
+
+| Field | Description |
+|---|---|
+| **Monitor Type** | The metric to watch — **Positive Intent Rate** or **Outcome Rate** |
+| **Alert Type** | The dimension to evaluate — **Date** or **Source** |
+| **Comparison** | **Greater Than** or **Less Than** |
+| **Metric Threshold (%)** | A numeric percentage value that triggers the alert |
+| **Webhook URL** | A publicly accessible URL that receives the JSON payload |
+
+<Tip>
+  Make sure your webhook endpoint is publicly reachable before saving an alert. Mav won't retry delivery if the initial request fails.
+</Tip>
+
+## Webhook Payload
+
+When an alert fires, Mav sends a `POST` request to your webhook URL with the following JSON structure:
+
+```json
+{
+  "alert": {
+    "monitor_type": "PositiveIntentRate",
+    "alert_type": "Date",
+    "alert_metric": 5,
+    "alert_metric_comparison": "islessthan",
+    "note": "OutreachPlaybookAlert-PositiveIntentRateonDateislessthan5%",
+    "datetime": "2023-06-02T10:41:13.704-07:00"
+  },
+  "metric": {
+    "metric_type": "Date",
+    "date": "2023-06-02",
+    "source": "source_a",
+    "sub_source": "subsource_b",
+    "leads": 1,
+    "wins": 0,
+    "win_percentage": 0,
+    "positive_intents": 0,
+    "positive_intent_percentage": 0,
+    "win_to_positive_intent_percentage": 0
+  },
+  "playbook": {
+    "id": "pbk_wtBPCUDFJDppvD",
+    "name": "Outreach"
+  }
+}
+```
+
+The payload contains three top-level objects:
+
+| Object | What it contains |
+|---|---|
+| `alert` | The alert configuration that fired, including the comparison and threshold |
+| `metric` | The actual metric values recorded at the time the alert triggered |
+| `playbook` | The ID and name of the playbook the alert belongs to |

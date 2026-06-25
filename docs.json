@@ -1,0 +1,132 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "almond",
+  "name": "Mav",
+  "description": "Mav is an AI-powered lead engagement platform that qualifies insurance leads via SMS and connects them to agents through live call transfers.",
+  "colors": {
+    "primary": "#2563EB",
+    "light": "#EFF6FF",
+    "dark": "#1E3A8A"
+  },
+  "favicon": {
+    "light": "/images/Mav-logo-collapsed.png",
+    "dark": "/images/Mav-logo-collapsed.png"
+  },
+  "icons": {
+    "library": "lucide"
+  },
+  "styling": {
+    "eyebrows": "breadcrumbs"
+  },
+  "contextual": {
+    "options": ["copy", "view", "assistant"]
+  },
+  "navigation": {
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Home",
+          "icon": "house",
+          "href": "/"
+        },
+        {
+          "anchor": "Support",
+          "icon": "life-buoy",
+          "href": "mailto:support@hiremav.com"
+        }
+      ]
+    },
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "icon": "rocket",
+            "pages": [
+              "introduction",
+              "lead-delivery/import-leads-csv"
+            ]
+          },
+          {
+            "group": "Lead Delivery",
+            "icon": "users",
+            "pages": [
+              "lead-delivery/marketing-sources",
+              "lead-delivery/blocked-sources-scrub-services",
+              "lead-delivery/texting-hours"
+            ]
+          },
+          {
+            "group": "Party Line",
+            "icon": "phone-call",
+            "pages": [
+              "party-line/overview",
+              "party-line/availability-schedule",
+              "party-line/route-calls",
+              "party-line/completed-calls"
+            ]
+          },
+          {
+            "group": "Analytics & Alerts",
+            "icon": "chart-bar",
+            "pages": [
+              "analytics/playbook-alerts"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "icon": "plug",
+            "pages": [
+              "integrations/slack",
+              "integrations/zapier",
+              "integrations/ricochet-360"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "icon": "book-open",
+            "pages": [
+              "api/overview"
+            ]
+          },
+          {
+            "group": "Outbound API",
+            "icon": "webhook",
+            "pages": [
+              "api/outbound-webhooks",
+              "api/events",
+              "api/outcomes"
+            ]
+          },
+          {
+            "group": "Inbound API",
+            "icon": "arrow-down-to-line",
+            "pages": [
+              "api/marketing-sources-api"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [],
+    "primary": {
+      "type": "button",
+      "label": "Log in to Mav",
+      "href": "https://app.hiremav.com"
+    }
+  },
+  "footer": {
+    "socials": {
+      "x": "https://x.com/hiremav",
+      "linkedin": "https://linkedin.com/company/hiremav"
+    }
+  }
+}

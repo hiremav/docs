@@ -1,0 +1,228 @@
+---
+title: "Marketing Sources API: Submit Leads Directly to Mav"
+sidebarTitle: "Marketing Sources"
+description: "POST lead data directly to Mav via a unique Marketing Source URL — supports JSON and form-encoded payloads, with full field reference included."
+---
+
+The Marketing Sources API is Mav's inbound lead submission interface. Each Marketing Source you create in the Mav dashboard generates a unique POST endpoint (called a **postURL**) that is tied to a specific playbook. When you submit a lead to that URL, Mav immediately enrolls the lead into the associated playbook and begins working them — no manual import, no dashboard interaction required.
+
+This page covers everything you need to know to integrate your lead sources, marketing platforms, or CRM workflows with Mav's inbound API.
+
+---
+
+## Getting Your postURL
+
+Every Marketing Source has its own unique postURL. To find yours:
+
+1. Log into the Mav dashboard.
+2. Navigate to **Integrations → Marketing Sources**.
+3. Select the Marketing Source you want to use, or create a new one.
+4. Copy the **postURL** shown on the source detail page.
+
+The postURL encodes both your account ID and the source ID directly in the path, so the URL itself acts as your credential — no API key or header-based auth is required for this endpoint.
+
+<Warning>
+  Your postURL is sensitive. Anyone who has the URL can submit leads to your playbook and consume your messaging credits. Do not expose it in client-side code, public repositories, or browser-accessible JavaScript.
+</Warning>
+
+---
+
+## Endpoint
+
+```
+POST https://hiremav.com/marketing_sources/{account_id}/{source_id}
+```
+
+### Path Parameters
+
+| Parameter | Description |
+|---|---|
+| `account_id` | Your Mav account identifier (e.g., `acc_2SbUe8xLqEqrL3`). Found in your postURL. |
+| `source_id` | The unique identifier for the Marketing Source (e.g., `mks_kgaafDRBWshCzp`). Found in your postURL. |
+
+Both values are embedded in the postURL you copied from the dashboard — you do not need to construct the URL manually.
+
+---
+
+## Request Formats
+
+The endpoint accepts two content types. Use whichever is most convenient for your integration platform.
+
+<CodeGroup>
+
+```bash JSON
+curl -X POST "https://hiremav.com/marketing_sources/acc_2SbUe8xLqEqrL3/mks_kgaafDRBWshCzp" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "5551234567",
+    "current_insurance_carrier": "State Farm",
+    "current_insurance_coverage": "Full Coverage",
+    "current_residence_address": "123 Main St",
+    "current_residence_city": "Austin",
+    "current_residence_state": "TX",
+    "current_residence_zip": "78701",
+    "date_of_birth": "1985-04-15",
+    "gender": "Male",
+    "marital_status": "Married",
+    "credit_rating": "Good",
+    "tcpa_opt_in_token": "jornaya-token-abc123",
+    "tcpa_opt_in_url": "https://proof.jornaya.com/abc123"
+  }'
+```
+
+```bash Form Encoded
+curl -X POST "https://hiremav.com/marketing_sources/acc_2SbUe8xLqEqrL3/mks_kgaafDRBWshCzp" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  --data-urlencode "first_name=John" \
+  --data-urlencode "last_name=Doe" \
+  --data-urlencode "email=john.doe@example.com" \
+  --data-urlencode "phone=5551234567" \
+  --data-urlencode "current_insurance_carrier=State Farm" \
+  --data-urlencode "current_insurance_coverage=Full Coverage" \
+  --data-urlencode "current_residence_address=123 Main St" \
+  --data-urlencode "current_residence_city=Austin" \
+  --data-urlencode "current_residence_state=TX" \
+  --data-urlencode "current_residence_zip=78701" \
+  --data-urlencode "date_of_birth=1985-04-15" \
+  --data-urlencode "gender=Male" \
+  --data-urlencode "marital_status=Married" \
+  --data-urlencode "credit_rating=Good" \
+  --data-urlencode "tcpa_opt_in_token=jornaya-token-abc123" \
+  --data-urlencode "tcpa_opt_in_url=https://proof.jornaya.com/abc123"
+```
+
+</CodeGroup>
+
+---
+
+## Request Fields
+
+The fields below are required for a standard Mortgage Qualification playbook. The exact required fields depend on your specific playbook configuration — contact your Mav account team if you are unsure which fields your playbook needs.
+
+### Identity Fields
+
+<ParamField body="first_name" type="string" required>
+  The lead's given name.
+</ParamField>
+
+<ParamField body="last_name" type="string" required>
+  The lead's family name or surname.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  The lead's email address. Used for identification and follow-up.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  The lead's phone number. Accepts formats with or without formatting characters (e.g., `5551234567` or `555-123-4567`). Mav will normalize the number.
+</ParamField>
+
+<ParamField body="date_of_birth" type="string" required>
+  The lead's full date of birth in `YYYY-MM-DD` format. Used for quoting and identity verification.
+</ParamField>
+
+<ParamField body="gender" type="string" required>
+  The lead's identified gender (e.g., `Male`, `Female`).
+</ParamField>
+
+<ParamField body="marital_status" type="string" required>
+  The lead's marital status. Accepted values include `Single`, `Married`, `Divorced`, `Widowed`.
+</ParamField>
+
+### Residence Fields
+
+<ParamField body="current_residence_address" type="string" required>
+  Full street address of the lead's current residence (e.g., `123 Main St`).
+</ParamField>
+
+<ParamField body="current_residence_city" type="string" required>
+  City where the lead currently resides.
+</ParamField>
+
+<ParamField body="current_residence_state" type="string" required>
+  Two-letter state abbreviation where the lead currently resides (e.g., `TX`).
+</ParamField>
+
+<ParamField body="current_residence_zip" type="string" required>
+  ZIP code of the lead's current residence (e.g., `78701`).
+</ParamField>
+
+### Insurance Fields
+
+<ParamField body="current_insurance_carrier" type="string" required>
+  The name of the insurance company currently providing the lead's policy (e.g., `State Farm`, `Geico`).
+</ParamField>
+
+<ParamField body="current_insurance_coverage" type="string" required>
+  The type or level of the lead's existing insurance coverage (e.g., `Full Coverage`, `Liability Only`).
+</ParamField>
+
+<ParamField body="credit_rating" type="string" required>
+  The lead's self-reported credit tier. Accepted values: `Excellent`, `Good`, `Fair`, `Poor`.
+</ParamField>
+
+### TCPA Consent Fields
+
+<ParamField body="tcpa_opt_in_token" type="string" required>
+  A TCPA consent token from a certified consent provider such as **Jornaya** or **ActiveProspect**. This token serves as proof that the lead provided verifiable consent to be contacted.
+</ParamField>
+
+<ParamField body="tcpa_opt_in_url" type="string" required>
+  The URL to the TCPA proof-of-consent record (e.g., `https://proof.jornaya.com/abc123`). This is used for compliance documentation and audit purposes.
+</ParamField>
+
+---
+
+## TCPA Compliance
+
+<Warning>
+  Both `tcpa_opt_in_token` and `tcpa_opt_in_url` are required for all lead submissions. Submitting leads without valid TCPA consent documentation is a compliance violation and may result in your Marketing Source being suspended.
+
+  Mav uses these tokens to verify that the lead consented to automated messaging before any outreach begins. Ensure your lead generation forms are configured to capture and pass Jornaya or ActiveProspect tokens on every submission.
+</Warning>
+
+If you are generating leads through your own web forms, integrate with [Jornaya LeadiD](https://www.jornaya.com/) or [ActiveProspect TrustedForm](https://activeprospect.com/trustedform/) to capture consent tokens at the point of form submission.
+
+---
+
+## What Happens After Submission
+
+Once Mav receives a valid lead submission:
+
+1. **Lead is created** — Mav creates a lead record with the submitted data and assigns a unique `lead_id`.
+2. **Lead is tagged to the source** — The lead is associated with the Marketing Source, so you can track attribution and volume per source in the Mav dashboard.
+3. **Playbook starts** — Mav begins the playbook sequence for that source. The `started` event fires and is delivered to any subscribed webhook URLs.
+4. **Activity flows back to you** — As the lead progresses, Mav fires events and outcomes to your configured webhook endpoints, including the `lead_originators` data so you can match updates back to your records.
+
+A successful submission returns an HTTP `200` response. If required fields are missing or the payload is malformed, the endpoint returns a `4xx` error with a description of the problem.
+
+---
+
+## Passing Your Own Lead ID
+
+If you want to match Mav webhook activity back to a specific record in your system, include your internal lead identifier as a custom field when submitting the lead. Mav will echo it back in the `lead_originators` array on every webhook payload.
+
+```json
+{
+  "first_name": "John",
+  "last_name": "Doe",
+  "email": "john.doe@example.com",
+  "phone": "5551234567",
+  "your_crm_id": "crm-lead-id-456",
+  ...
+}
+```
+
+When Mav sends a webhook for that lead, the `lead_originators` field will contain the source name and the key value you provided, letting you do a direct lookup in your CRM without any fuzzy matching.
+
+---
+
+## Related Pages
+
+- [API Overview](/api/overview) — How the inbound and outbound APIs work together.
+- [Outbound Webhooks](/api/outbound-webhooks) — Receive real-time activity as Mav works your submitted leads.
+- [Event Activities](/api/events) — Every event that can fire after a lead is submitted.
+- [Outcome Activities](/api/outcomes) — Every outcome that closes out a lead's playbook journey.

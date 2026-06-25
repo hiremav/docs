@@ -1,0 +1,81 @@
+---
+title: "Mav Party Line: Live Call Transfer Feature Overview"
+sidebarTitle: "Overview"
+description: "Learn how Mav's Party Line feature works — from qualifying a lead through SMS to bridging them live with a sales rep via three-way call transfer."
+---
+
+Party Line is Mav's live call transfer feature. Once a lead qualifies through an SMS playbook, Mav steps in to bridge that lead directly to one of your sales reps — no manual dialing, no dropped handoffs. This page covers how Party Line works end-to-end, what happens when a transfer succeeds or fails, how leads can initiate calls themselves, and how to review completed calls and their outcomes.
+
+## How Party Line Works
+
+When a lead reaches a qualifying point in your SMS playbook, Mav takes the following steps to connect them with a rep:
+
+1. **Mav texts the lead** asking if they'd like to speak with a representative right now.
+2. **If the lead agrees**, Mav calls the lead's phone number to confirm the connection.
+3. **Mav then calls the rep** and bridges the two parties into a live three-way call.
+4. **Once both parties are connected**, Mav steps back and the conversation continues between the lead and the rep.
+
+Throughout this process, Mav handles every failure point gracefully — if the lead doesn't pick up, if the rep is unavailable, or if either party declines, Mav records the appropriate outcome and can continue the SMS conversation.
+
+## Lead-Initiated Calls
+
+Leads don't have to wait for Mav to reach out. If a lead calls your Mav number directly, Mav will handle that inbound call, confirm the lead's intent to connect, and attempt to bridge them with a rep. This flow triggers the `party_line_lead_initiated_call` event and follows the same bridging logic as an outbound transfer.
+
+<Note>
+  Make sure your [Availability Schedule](/party-line/availability-schedule) is configured so that lead-initiated calls are only attempted during hours when reps are actually available.
+</Note>
+
+## Transfer Outcomes
+
+Every Party Line attempt produces one or more events that reflect exactly what happened. These events are emitted through the outbound API and can be received via webhook.
+
+### Outbound API Event Types
+
+| Event | Description |
+|---|---|
+| `party_line_lead_attempted` | Mav has texted the lead asking if they'd like to be connected to a rep. |
+| `party_line_lead_unsuccessful` | The lead did not confirm they'd like to be connected (no response, declined, or timed out). |
+| `party_line_lead_answered` | The lead confirmed they'd like to be connected and Mav is now calling them. |
+| `party_line_rep_attempted` | Mav is attempting to call the rep to complete the bridge. |
+| `party_line_rep_unsuccessful` | Mav was unable to join the lead and rep (rep didn't answer, line busy, etc.). |
+| `party_line_lead_initiated_call` | The lead called into your Mav number directly to initiate a transfer. |
+| `party_line_lead_initiated_call_unsuccessful` | A lead-initiated call came in but the lead did not confirm the connection. |
+| `party_line_completed` | The lead and rep successfully completed a Party Line call. This is an **outcome** event. |
+
+<Tip>
+  Subscribe to the `party_line_completed` webhook to receive a summary, recording link, and transcript URL automatically after every successful call. This is useful for CRM integrations and post-call workflows.
+</Tip>
+
+### What Happens on Failure
+
+Mav is designed to handle incomplete transfers without interrupting your lead's experience:
+
+- **Lead doesn't confirm**: Mav records a `party_line_lead_unsuccessful` event. The SMS playbook can continue or follow up at a later time.
+- **Rep doesn't answer**: Mav records a `party_line_rep_unsuccessful` event. You can configure fallback behavior — such as scheduling a callback or continuing the SMS conversation.
+- **Lead-initiated call with no confirmation**: Mav records a `party_line_lead_initiated_call_unsuccessful` event and handles the call gracefully rather than leaving the lead in silence.
+
+## Availability Schedules
+
+You can control exactly when Party Line transfers are attempted by setting an availability schedule. This prevents Mav from trying to bridge calls outside of business hours or when no reps are on duty.
+
+See [Setting Your Party Line Availability Schedule](/party-line/availability-schedule) for step-by-step instructions.
+
+<Warning>
+  Agent availability must be turned on in your dashboard in addition to any schedule you set. If availability is toggled off, Party Line transfers will not be attempted regardless of the schedule.
+</Warning>
+
+## Reviewing Completed Calls
+
+Every completed Party Line call is logged on the **Party Lines Completed** page inside the Mav dashboard. There you can:
+
+- Read a **Copilot summary** of the call at a glance
+- Access the full **recording** and **written transcript**
+- Filter by date range and **export data to CSV** for reporting or compliance
+
+See [Party Lines Completed](/party-line/completed-calls) for a full feature reference.
+
+## Routing External Calls to Your Mav Number
+
+If you want after-hours callers on your business line to reach Mav automatically, you can configure your phone system's IVR to forward calls to your Mav number. This works with most modern phone systems including RingCentral.
+
+See [How to Route Calls to Your Mav Number](/party-line/route-calls) for a step-by-step guide.

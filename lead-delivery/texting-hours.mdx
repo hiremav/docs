@@ -1,0 +1,55 @@
+---
+title: "Texting Hours: When Mav Sends Outbound SMS Messages"
+sidebarTitle: "Texting Hours"
+description: "Configure when Mav sends outbound texts - using each lead's local time zone or a fixed Eastern Time schedule- and understand holiday and reply behavior."
+---
+
+Mav is designed to reach your leads at the right moment without texting at inappropriate hours. This page explains the two texting hour modes available in Mav, how inbound replies are handled outside of those windows, and what happens on federal holidays. You can find these settings under **Settings → Texting Hours**.
+
+## Dynamic Texting Hours (default)
+
+When **Dynamic Texting Hours** is turned on, Mav determines each lead's local time zone based on their phone number's area code and sends outbound messages only within that lead's local window.
+
+| Setting | Value |
+| --- | --- |
+| **Days** | Monday through Saturday |
+| **Hours** | 8:00 AM – 8:00 PM (lead's local time) |
+| **Time zone source** | Area code of the lead's phone number |
+
+This is the recommended mode because it maximizes engagement—leads receive messages at times that feel natural to them—while keeping your outreach within appropriate hours across all U.S. time zones.
+
+## Fixed Eastern Time schedule
+
+When **Dynamic Texting Hours** is turned off, Mav sends all outbound messages on a fixed Eastern Time schedule, regardless of where the lead is located.
+
+| Setting | Value |
+| --- | --- |
+| **Days** | Monday through Saturday |
+| **Hours** | 11:00 AM – 8:00 PM Eastern Time |
+| **Time zone source** | Fixed (Eastern Time) |
+
+<Note>
+  The later morning start time (11:00 AM ET vs. 8:00 AM local) reflects the fact that 11:00 AM Eastern corresponds to 8:00 AM Pacific—ensuring leads in western time zones aren't contacted before 8:00 AM their time even without dynamic detection.
+</Note>
+
+## Inbound replies
+
+If a lead texts Mav back, Mav responds immediately - regardless of the time of day or whether it falls within texting hours. Mav will not, however, proactively re-engage that lead with a new outbound message outside of the configured texting window.
+
+## Federal holidays
+
+Mav does not send any proactive outbound text messages on U.S. federal holidays. If a lead reaches out on a holiday, Mav will still respond to their inbound message as normal.
+
+## Summary
+
+| Situation | Behavior |
+| --- | --- |
+| Dynamic ON — outbound | M–Sat, 8 AM – 8 PM in the lead's local time zone |
+| Dynamic OFF — outbound | M–Sat, 11 AM – 8 PM Eastern Time |
+| Lead sends an inbound reply | Mav responds immediately, any time of day |
+| Federal holiday — outbound | No proactive messages sent |
+| Federal holiday — inbound reply | Mav responds normally |
+
+<Tip>
+  Keep Dynamic Texting Hours enabled unless you have a specific reason to use a fixed schedule. Dynamic mode gives every lead the best chance of receiving your message at an optimal time, which tends to improve response rates and positive intent.
+</Tip>

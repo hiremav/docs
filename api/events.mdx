@@ -1,0 +1,131 @@
+---
+title: "Event Activities: Mav Playbook Webhook Event Reference"
+sidebarTitle: "Events"
+description: "Complete reference for every event activity Mav fires via webhook — covering lead engagement, party line calls, and copilot interventions."
+---
+
+When Mav processes a lead through a playbook, it fires two categories of activity: **events** and **outcomes**. Events represent discrete moments in the conversation or playbook flow — things that happen along the way. Outcomes represent the final state of a lead's journey (see [Outcomes](/api/outcomes) for those). Understanding the distinction is important when designing your webhook integrations: you may want to act immediately on certain events (like `copilot_paused` to alert your team) while waiting for an outcome to update your CRM.
+
+Every event is delivered as a standard [webhook payload](/api/outbound-webhooks) with `activity_type` set to `"event"` and `activity_label` set to the event name.
+
+---
+
+## Subscribing to Events
+
+Events are configured per playbook in **Settings → Activity Subscriptions**. You can subscribe to individual events, all events, or any combination. Unsubscribed events are not delivered to your endpoint — only the ones you opt into generate webhook calls.
+
+---
+
+## Lead Engagement Events
+
+These events track the core progression of a lead through a playbook — from first contact through completion.
+
+| Event | Description |
+|---|---|
+| `started` | Mav has sent the first message to the lead. This fires once per play when the playbook sequence begins. |
+| `double_opted_in` | The lead has explicitly expressed positive intent and opted into further messaging. |
+| `interested` | The lead has expressed positive intent. Usually fires at the same time as `double_opted_in`. |
+| `reengagement_sent` | Mav has sent a smart re-engagement message to a lead who had gone quiet. |
+| `stopped` | The playbook has been stopped — either manually by a user in the dashboard or automatically during an opt-out flow. |
+| `completed` | The playbook has reached an outcome and the lead's journey through this play is finished. |
+
+<Note>
+  `interested` and `double_opted_in` frequently fire together on the same action. If you are building CRM logic on top of these events, treat them as complementary signals rather than mutually exclusive states.
+</Note>
+
+---
+
+## Party Line Events
+
+Party Line events track the full lifecycle of a Mav-facilitated three-way call between a lead and one of your reps.
+
+| Event | Description |
+|---|---|
+| `party_line_lead_attempted` | Mav has attempted to call the lead to initiate a party line connection. |
+| `party_line_lead_unsuccessful` | The lead did not confirm they wanted to be connected when Mav called. |
+| `party_line_lead_answered` | The lead confirmed they want to be connected to the rep. Mav will now attempt to bring in the rep. |
+| `party_line_rep_attempted` | Mav has attempted to call the rep to complete the three-way connection. |
+| `party_line_rep_unsuccessful` | Mav was unable to successfully join the lead and the rep on the party line call. |
+| `party_line_lead_initiated_call` | The lead called into your Mav number, initiating the party line flow themselves. |
+| `party_line_lead_initiated_call_unsuccessful` | The lead called in but did not confirm they wanted to be connected. |
+
+<Tip>
+  Use `party_line_rep_unsuccessful` to trigger an alert to your team. This means Mav successfully engaged the lead for a call, but the rep could not be reached — a warm lead that needs immediate human follow-up.
+</Tip>
+
+---
+
+## CatchAll Events
+
+CatchAll events fire when a lead's response doesn't match any of the configured playbook branches and falls through to a catch-all handling level.
+
+| Event | Description |
+|---|---|
+| `catch_all_level1` | The lead's message matched the Level 1 catch-all handler. |
+| `catch_all_level2` | The lead's message matched the Level 2 catch-all handler. |
+| `catch_all_level3` | The lead's message matched the Level 3 catch-all handler. |
+
+---
+
+## Copilot Events
+
+Copilot events fire when the conversation requires human oversight or intervention from a Mav operator.
+
+| Event | Description |
+|---|---|
+| `copilot_paused` | Mav has paused the conversation because a Mav operator needs to review and potentially intervene. |
+| `copilot_restarted` | A Mav operator has reviewed the conversation and restarted the automated flow. |
+
+<Note>
+  When `copilot_paused` fires, no further automated messages are sent until a Mav operator takes action and the `copilot_restarted` event fires. If your team monitors lead activity, this pair of events is a useful signal for flagging complex or sensitive conversations.
+</Note>
+
+---
+
+## Zapier-Specific Events
+
+The following events are available when using Mav's Zapier integration and may appear as `activity_label` values in webhook payloads triggered through that integration.
+
+| Event | Description |
+|---|---|
+| `message_received` | An inbound message was received from the lead. |
+| `qualified` | The lead was marked as qualified by Mav. |
+| `talk_to_human` | The lead requested to speak with a human representative. |
+| `talk_to_human_spanish` | The lead requested to speak with a Spanish-speaking human representative. |
+| `party_line_available` | A party line call is available and ready to connect. |
+| `party_line_unavailable` | A party line call could not be connected. |
+| `undeliverable_rejected` | The carrier actively rejected messages to this number. Treat as a terminal undeliverable state. |
+
+---
+
+## Event Payload Example
+
+The following is an example webhook payload for the `copilot_paused` event:
+
+```json
+{
+  "activity_type": "event",
+  "activity_label": "copilot_paused",
+  "activity_play_id": "ply_abc123xyz",
+  "activity_note": "Lead requires operator review before continuing",
+  "activity_created_at": "2024-01-15T14:30:00Z",
+  "lead_id": "ld_def456uvw",
+  "lead_first_name": "Jane",
+  "lead_last_name": "Doe",
+  "lead_email": "jane.doe@example.com",
+  "lead_opted_out": false,
+  "lead_created_at": "2024-01-15T09:00:00Z",
+  "lead_additional_info": [],
+  "lead_originators": [
+    { "origin": "source_a", "key": "external-lead-id-789" }
+  ]
+}
+```
+
+---
+
+## Related Pages
+
+- [Outcome Activities](/api/outcomes) — Terminal states that close out a lead's play.
+- [Outbound Webhooks](/api/outbound-webhooks) — Full payload reference and best practices for receiving webhooks.
+- [Marketing Sources API](/api/marketing-sources-api) — Submit leads to Mav to kick off a playbook.

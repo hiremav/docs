@@ -1,0 +1,81 @@
+---
+title: "What Is Mav? AI-Powered Insurance Lead Engagement Tool"
+sidebarTitle: "Introduction"
+description: "Mav is an AI platform that qualifies insurance leads via SMS and connects them to agents through live Party Line call transfers—automatically, at scale."
+---
+
+Mav is an AI-powered lead engagement platform built specifically for the insurance industry. This page explains what Mav does, how leads move through the system from first contact to a live conversation with an agent, and where each part of the documentation can take you next.
+
+## What Mav does
+
+Insurance leads go cold fast. When a prospect fills out a quote form, every minute without a response lowers your chance of making contact. Mav solves that by automatically reaching out to new leads via SMS the moment they're delivered—no manual dialing, no waiting for an agent to be available.
+
+Mav's AI engages each lead in a natural, two-way text conversation. It qualifies them by asking relevant insurance questions (coverage type, current carrier, address, date of birth, and more), handles objections, and re-engages leads who don't respond right away. When a lead is ready to speak with someone, Mav initiates a **Party Line**—a live, three-way call that bridges the qualified lead and an available agent in real time.
+
+The result: your agents spend their time on high-intent, already-qualified conversations instead of cold outreach.
+
+## How Mav works
+
+<Steps>
+  <Step title="A lead is delivered to Mav">
+    Leads arrive in Mav through one of three paths: a **Marketing Source** postURL (for real-time form or API submissions), a **CSV import** (for bulk uploads with TCPA consent confirmation), or a native integration such as Ricochet 360 or Zapier. Each lead is assigned to a **Playbook**—the automated SMS conversation sequence that defines how Mav engages that lead.
+  </Step>
+  <Step title="Mav qualifies the lead via SMS">
+    As soon as a lead enters a playbook, Mav sends the first outbound text message within texting hours. The AI continues the conversation, gathering qualification data and gauging intent. If the lead goes quiet, Mav sends smart re-engagement messages. Every response is tracked and surfaced in your playbook reporting so you can see positive intent rates and outcomes by source and date.
+  </Step>
+  <Step title="Party Line connects the lead to an agent">
+    Once a lead is qualified and expresses interest in speaking with someone, Mav initiates a **Party Line**—it calls the lead, confirms they're ready to connect, then calls an available agent and bridges both parties into a live call. After the call ends, Mav generates a **Copilot summary** and full transcript so you can review the conversation, log the outcome, and export records for reporting or compliance.
+  </Step>
+</Steps>
+
+## Key concepts
+
+<CardGroup cols={2}>
+  <Card title="Lead Delivery" icon="users" href="/lead-delivery/marketing-sources">
+    Create Marketing Sources with custom postURLs to receive leads from any vendor or web form. Tag leads by source automatically for clean attribution.
+  </Card>
+  <Card title="Party Line" icon="phone-call" href="/party-line/overview">
+    Live call transfers that connect qualified leads directly to your agents. Configure schedules, route calls from your business number, and review completed calls with Copilot summaries.
+  </Card>
+  <Card title="Analytics & Alerts" icon="bell" href="/analytics/playbook-alerts">
+    Monitor positive intent rates and outcomes by source or date. Set webhook-delivered Playbook Alerts to get notified the moment performance crosses a threshold.
+  </Card>
+  <Card title="Integrations" icon="plug" href="/integrations/slack">
+    Connect Mav to Slack, Zapier, and Ricochet 360 with one-click integrations. Push lead events and outcomes to thousands of downstream tools automatically.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api/overview">
+    Subscribe to outbound webhooks for any playbook event or outcome—started, qualified, party line completed, opted out, and more—to keep your CRM and data warehouse in sync.
+  </Card>
+  <Card title="CSV Import" icon="upload" href="/lead-delivery/import-leads-csv">
+    Upload bulk lead lists directly into a playbook. Mav handles column mapping, daily pacing limits (500 leads/day), and automatic deferral for oversized files.
+  </Card>
+</CardGroup>
+
+## TCPA compliance
+
+<Warning>
+  You are responsible for ensuring that every lead you send to Mav has given written or electronic consent to be contacted via automated SMS messages and voice calls, as required by the Telephone Consumer Protection Act (TCPA).
+
+  When importing leads via CSV, you must toggle the **TCPA Consent** confirmation before the import can proceed. For Marketing Source integrations, include a `tcpa_opt_in_token` (e.g., a Jornaya or ActiveProspect LeadiD) and a `tcpa_opt_in_url` in your lead payload to document proof of consent.
+</Warning>
+
+Mav also provides built-in tools to help you maintain lead quality and compliance:
+
+- **Blocked Sources** — prevent specific vendors, affiliates, or sub-sources from submitting leads to your account.
+- **Scrub Services** — automatically check incoming leads against the **Blacklist Alliance** and **DNC.com** suppression lists and reject any that match before they enter a playbook.
+
+<Tip>
+  Enable **Dynamic Texting Hours** (the default) to have Mav send outbound texts between 8 AM and 8 PM in each lead's *local* time zone, based on their phone number's area code. This maximizes engagement while keeping your outreach within legally and ethically appropriate hours. If you prefer a fixed schedule, you can switch to Eastern Time mode (11 AM – 8 PM ET, Monday–Saturday) under **Settings → Texting Hours**.
+</Tip>
+
+## What's next?
+
+If you're just getting started, the fastest path to your first live lead is:
+
+1. Set up a **Marketing Source** to get your postURL — see [Lead Delivery → Marketing Sources](/lead-delivery/marketing-sources).
+2. Configure your **Party Line** availability so Mav knows when agents are reachable — see [Party Line → Overview](/party-line/overview).
+3. Import a test batch of leads via **CSV** to see the full qualification flow — see [Lead Delivery → Import Leads via CSV](/lead-delivery/import-leads-csv).
+
+<Note>
+  If you have questions or run into trouble at any point, reach out to the Mav support team at [support@hiremav.com](mailto:support@hiremav.com).
+</Note>

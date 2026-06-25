@@ -1,0 +1,116 @@
+---
+title: Mav Knowledge Base
+description: Everything you need to deliver leads, run playbooks, set up Party Line transfers, and connect your tools to Mav.
+mode: frame
+---
+
+<div data-product-guide-index className="flex w-full flex-col gap-8 max-w-5xl mx-auto px-4 md:px-8 lg:px-12 py-10 lg:gap-14 lg:py-16">
+  <div className="flex max-w-[540px] flex-col gap-2 self-center text-center">
+    <h1 className="text-[30px] font-medium leading-9 tracking-tight text-gray-900 dark:text-gray-50">
+      Mav Knowledge Base
+    </h1>
+    <p className="text-balance text-base leading-relaxed tracking-tight text-gray-600 dark:text-gray-400">
+      Everything you need to deliver leads, run AI-powered playbooks, configure Party Line live transfers, and connect Mav to your existing tools.
+    </p>
+  </div>
+
+  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+    <Card
+      title={<span className="product-guide-feature-card-title">Get Started</span>}
+      icon="rocket"
+      href="/introduction"
+      className="product-guide-feature-card"
+      size={64}
+    >
+      <span className="product-guide-feature-card-description">Learn how Mav works and start engaging your first leads.</span>
+    </Card>
+
+    <a
+      href="/lead-delivery/marketing-sources"
+      className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary"
+    >
+      <Icon icon="users" color="rgb(var(--primary))" size={18} className="shrink-0" />
+      <div className="flex flex-col gap-1">
+        <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Lead Delivery</span>
+        <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          Send leads to Mav via Marketing Sources, CSV import, or direct API.
+        </span>
+      </div>
+    </a>
+    <a
+      href="/party-line/overview"
+      className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary"
+    >
+      <Icon icon="phone-call" color="rgb(var(--primary))" size={18} className="shrink-0" />
+      <div className="flex flex-col gap-1">
+        <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Party Line</span>
+        <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+          Live call transfers that connect qualified leads directly to your agents.
+        </span>
+      </div>
+    </a>
+  </div>
+
+  <hr className="border-0 border-t border-border" />
+
+  <div className="flex flex-col gap-4">
+    <h2 className="font-serif text-xl font-medium leading-normal text-gray-900 dark:text-gray-50">Common tasks</h2>
+
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <a href="/lead-delivery/import-leads-csv" className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary">
+        <Icon icon="upload" color="rgb(var(--primary))" size={18} className="shrink-0" />
+        <div className="flex flex-col gap-1">
+          <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Import leads via CSV</span>
+          <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            Upload a list of leads into a playbook with TCPA consent confirmation.
+          </span>
+        </div>
+      </a>
+      <a href="/party-line/availability-schedule" className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary">
+        <Icon icon="calendar-clock" color="rgb(var(--primary))" size={18} className="shrink-0" />
+        <div className="flex flex-col gap-1">
+          <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Set transfer schedule</span>
+          <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            Configure when Mav can initiate Party Line live transfers to your agents.
+          </span>
+        </div>
+      </a>
+      <a href="/integrations/zapier" className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary">
+        <Icon icon="zap" color="rgb(var(--primary))" size={18} className="shrink-0" />
+        <div className="flex flex-col gap-1">
+          <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Connect via Zapier</span>
+          <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            Trigger playbooks and receive lead events in Salesforce, HubSpot, and more.
+          </span>
+        </div>
+      </a>
+      <a href="/api/outbound-webhooks" className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary">
+        <Icon icon="webhook" color="rgb(var(--primary))" size={18} className="shrink-0" />
+        <div className="flex flex-col gap-1">
+          <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Subscribe to webhooks</span>
+          <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            Receive real-time events and outcomes from your playbooks via webhook URL.
+          </span>
+        </div>
+      </a>
+      <a href="/analytics/playbook-alerts" className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary">
+        <Icon icon="bell" color="rgb(var(--primary))" size={18} className="shrink-0" />
+        <div className="flex flex-col gap-1">
+          <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Set up playbook alerts</span>
+          <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            Get notified when your positive intent or outcome rates cross a threshold.
+          </span>
+        </div>
+      </a>
+      <a href="/lead-delivery/blocked-sources-scrub-services" className="rounded-2xl flex flex-col gap-4 border bg-gray-50 p-4 outline-none shadow-sm shadow-gray-950/5 transition hover:border-primary hover:shadow-md dark:bg-gray-950 dark:shadow-black/20 dark:hover:border-primary">
+        <Icon icon="shield-check" color="rgb(var(--primary))" size={18} className="shrink-0" />
+        <div className="flex flex-col gap-1">
+          <span className="font-serif text-base font-medium text-gray-900 dark:text-gray-50">Block sources & scrub lists</span>
+          <span className="text-sm leading-relaxed text-gray-600 dark:text-gray-400">
+            Filter low-quality sources and check leads against DNC and Blacklist Alliance.
+          </span>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

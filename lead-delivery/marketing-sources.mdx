@@ -1,0 +1,148 @@
+---
+title: "Marketing Sources: Custom PostURLs for Lead Tracking"
+sidebarTitle: "Marketing Sources"
+description: "Create named postURLs that tag incoming leads by source automatically, so you can measure which vendors and campaigns drive qualified pipeline in Mav."
+---
+
+Marketing Sources lets you generate a unique postURL for each lead source—vendor, affiliate, web form, or campaign—and route leads directly into a specific Mav playbook. Because every URL is tied to a named source, Mav automatically tags each incoming lead so you can see attribution and performance data without any manual tracking.
+
+## How it works
+
+<Steps>
+  <Step title="Open Marketing Sources">
+    Go to **Integrations → Marketing Sources**.
+  </Step>
+  <Step title="Create a new source">
+    Click **New Marketing Source**.
+  </Step>
+  <Step title="Configure the source">
+    Give your source a clear, descriptive name, select the source type, and choose the playbook you want leads routed to.
+  </Step>
+  <Step title="Save and copy your postURL">
+    Click **Save Marketing Source**. Mav generates a unique postURL for this source. Copy it to use in your form or integration.
+  </Step>
+  <Step title="View integration instructions">
+    Click the **link icon** next to the source to open the Integration Instructions panel. It shows the exact URL and the accepted field names.
+  </Step>
+  <Step title="Start sending leads">
+    Point your lead vendor, form, or integration at the postURL. Mav begins receiving leads and tagging them to this source automatically.
+  </Step>
+</Steps>
+
+## How to send leads to Mav
+
+You can POST leads to your Marketing Source URL in two formats.
+
+### Form submission (URL-encoded)
+
+Send a standard HTML form POST with `application/x-www-form-urlencoded` encoding. The example below shows a minimal subset of fields for illustration—your actual payload must include all required fields listed in the [Required fields](#required-fields) section below.
+
+```bash
+POST https://hiremav.com/marketing_sources/acc_2SbUe8xLqEqrL3/mks_kgaafDRBWshCzp
+Content-Type: application/x-www-form-urlencoded
+
+first_name=Jane&last_name=Doe&phone=5551234567&email=jane@example.com&...
+```
+
+### JSON
+
+Send a `POST` request with a JSON body and the `Content-Type: application/json` header. The example below includes all required fields:
+
+```bash
+curl -X POST "https://hiremav.com/marketing_sources/acc_2SbUe8xLqEqrL3/mks_kgaafDRBWshCzp" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "john.doe@example.com",
+    "phone": "5551234567",
+    "current_insurance_carrier": "State Farm",
+    "current_insurance_coverage": "liability",
+    "current_residence_address": "123 Main St",
+    "current_residence_city": "Austin",
+    "current_residence_state": "TX",
+    "current_residence_zip": "78701",
+    "date_of_birth": "1985-06-15",
+    "gender": "male",
+    "marital_status": "married",
+    "credit_rating": "good",
+    "tcpa_opt_in_token": "abc123leadi-d-token",
+    "tcpa_opt_in_url": "https://www.example.com/auto-insurance-quote"
+  }'
+```
+
+<Note>
+  The URL above is an example. Your actual postURL will contain the account and source identifiers generated when you save your Marketing Source. Replace the placeholder field values with your lead's real data.
+</Note>
+
+## Required fields
+
+The following fields must be included in every lead payload. Missing required fields will cause the lead to be rejected.
+
+<ParamField body="first_name" type="string" required>
+  The lead's first name.
+</ParamField>
+
+<ParamField body="last_name" type="string" required>
+  The lead's last name.
+</ParamField>
+
+<ParamField body="email" type="string" required>
+  The lead's email address.
+</ParamField>
+
+<ParamField body="phone" type="string" required>
+  The lead's phone number. Used to initiate SMS outreach and determine the lead's local time zone for texting hours.
+</ParamField>
+
+<ParamField body="current_insurance_carrier" type="string" required>
+  The lead's current insurance carrier name.
+</ParamField>
+
+<ParamField body="current_insurance_coverage" type="string" required>
+  The lead's current coverage type or level.
+</ParamField>
+
+<ParamField body="current_residence_address" type="string" required>
+  The lead's current street address.
+</ParamField>
+
+<ParamField body="current_residence_city" type="string" required>
+  The city of the lead's current residence.
+</ParamField>
+
+<ParamField body="current_residence_state" type="string" required>
+  The two-letter state abbreviation for the lead's current residence (e.g., `TX`).
+</ParamField>
+
+<ParamField body="current_residence_zip" type="string" required>
+  The ZIP code of the lead's current residence.
+</ParamField>
+
+<ParamField body="date_of_birth" type="string" required>
+  The lead's date of birth. Recommended format: `YYYY-MM-DD`.
+</ParamField>
+
+<ParamField body="gender" type="string" required>
+  The lead's gender.
+</ParamField>
+
+<ParamField body="marital_status" type="string" required>
+  The lead's marital status (e.g., `single`, `married`).
+</ParamField>
+
+<ParamField body="credit_rating" type="string" required>
+  The lead's self-reported credit rating (e.g., `excellent`, `good`, `fair`, `poor`).
+</ParamField>
+
+<ParamField body="tcpa_opt_in_token" type="string" required>
+  A Jornaya LeadiD, ActiveProspect TrustedForm certificate ID, or equivalent token that documents the lead's TCPA consent at the time of form submission.
+</ParamField>
+
+<ParamField body="tcpa_opt_in_url" type="string" required>
+  The URL of the page where the lead provided TCPA consent. Used alongside `tcpa_opt_in_token` as proof of consent.
+</ParamField>
+
+<Warning>
+  You are responsible for ensuring that every lead you send to Mav has given written or electronic consent to be contacted via automated SMS and voice calls. Always include `tcpa_opt_in_token` and `tcpa_opt_in_url` to document that consent.
+</Warning>

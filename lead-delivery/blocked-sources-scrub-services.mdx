@@ -1,0 +1,74 @@
+---
+title: "Blocked Sources and Scrub Services for Lead Filtering"
+sidebarTitle: "Blocked Sources"
+description: "Reject leads from unwanted vendors and scrub incoming leads against the Blacklist Alliance and DNC.com suppression lists before they enter a playbook."
+---
+
+Mav gives you two tools for keeping bad leads out of your playbooks: **Blocked Sources** and **Scrub Services**. Blocked Sources lets you permanently reject leads from specific vendors or sub-sources. Scrub Services connects Mav to external suppression databases so every incoming lead is checked against the Blacklist Alliance and DNC.com lists automatically—before it enters a playbook.
+
+Both tools live under **Settings → Filters**.
+
+## Blocked Sources
+
+Use Blocked Sources to prevent a specific lead source—or a combination of source and sub-source—from submitting leads to your account. Once a source is blocked, any lead that arrives carrying that source identifier is rejected automatically.
+
+<Steps>
+  <Step title="Open Filters">
+    Navigate to **Settings → Filters**.
+  </Step>
+  <Step title="Open Blocked Sources">
+    Click **Blocked Sources**.
+  </Step>
+  <Step title="Enter the source details">
+    Enter the **Source** name. If the source uses sub-sources, enter the **Sub-Source** value as well—leaving the sub-source blank blocks all leads from that source regardless of sub-source.
+  </Step>
+  <Step title="Save">
+    Click **Save**. The block takes effect immediately for any new incoming leads.
+  </Step>
+</Steps>
+
+<Tip>
+  If a vendor uses multiple sub-sources, you can add separate blocked source entries for each one, or block the parent source entirely by leaving the sub-source field empty.
+</Tip>
+
+## Scrub Services
+
+Scrub Services connects Mav to external suppression databases. When enabled, Mav checks every incoming lead against the selected list before it enters a playbook—leads that match a suppression record are rejected automatically.
+
+Mav currently supports two scrubbing databases:
+
+| Service | What it screens for |
+|---------|-------------------|
+| **Blacklist Alliance** | Known litigants and serial TCPA complainants |
+| **DNC.com** | Do-Not-Call registry records |
+
+<Steps>
+  <Step title="Open Filters">
+    Navigate to **Settings → Filters**.
+  </Step>
+  <Step title="Open Scrub Services">
+    Click **Scrub Services**.
+  </Step>
+  <Step title="Enable a scrubbing database">
+    Toggle on **Blacklist Alliance**, **DNC.com**, or both.
+  </Step>
+  <Step title="Enter your API key">
+    When prompted, enter the API key for each service you've enabled. You obtain these keys directly from Blacklist Alliance and DNC.com.
+  </Step>
+  <Step title="Save">
+    Click **Save**. Mav begins scrubbing all incoming leads against the enabled databases immediately.
+  </Step>
+</Steps>
+
+<Warning>
+  Scrub Services requires a valid API key from each third-party provider. Make sure your API key is active and has sufficient query credits—if the key is invalid or exhausted, scrubbing will fail and leads may pass through unchecked.
+</Warning>
+
+## When to use each tool
+
+| Scenario | Recommended tool |
+|----------|-----------------|
+| A specific vendor is sending low-quality or non-consented leads | Blocked Sources |
+| You want to ensure no leads on the DNC registry enter your playbooks | Scrub Services → DNC.com |
+| You want to screen out known TCPA litigants before engaging | Scrub Services → Blacklist Alliance |
+| A source uses a sub-source identifier you want to target specifically | Blocked Sources with Sub-Source filled in |

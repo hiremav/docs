@@ -1,0 +1,183 @@
+---
+title: "Outbound Webhooks: Subscribe to Lead Activity Events"
+sidebarTitle: "Webhooks"
+description: "Receive real-time JSON payloads from Mav whenever a playbook event or outcome occurs — subscribe to one activity or all of them."
+---
+
+Mav's outbound API lets you subscribe to live activity from your playbooks. Every time a subscribed event or outcome fires on a lead, Mav sends a JSON POST to your configured webhook URL. You can subscribe to a single activity, a subset, or every activity your playbook supports — subscriptions are fully à la carte and configured per playbook.
+
+This is how you keep your CRM, data warehouse, or downstream automations in sync with what Mav is doing without ever polling for updates.
+
+---
+
+## Configuring Webhook Subscriptions
+
+Webhook URLs are configured inside each playbook's settings:
+
+1. Open the Mav dashboard and navigate to your **Playbook**.
+2. Go to **Settings → Activity Subscriptions**.
+3. Add your HTTPS endpoint URL.
+4. Select the specific events and/or outcomes you want to receive.
+5. Save your changes — subscriptions take effect immediately for new activity.
+
+You can register multiple URLs if you need to fan out activity to more than one downstream system. Each URL can subscribe to a different set of activities.
+
+<Note>
+  Subscriptions are per-playbook. If you run multiple playbooks, configure webhook URLs in each one separately.
+</Note>
+
+---
+
+## Payload Structure
+
+Both event and outcome activities POST the same set of parameters to your endpoint. The `activity_type` field tells you whether the payload represents an `event` or an `outcome`, and `activity_label` tells you exactly which one fired.
+
+### Top-Level Fields
+
+<ResponseField name="activity_type" type="string" required>
+  Whether this payload represents an `event` or an `outcome`.
+</ResponseField>
+
+<ResponseField name="activity_label" type="string" required>
+  The specific name of the event or outcome that fired — for example, `qualified`, `opted_out`, or `started`. See [Events](/api/events) and [Outcomes](/api/outcomes) for the full lists.
+</ResponseField>
+
+<ResponseField name="activity_play_id" type="string" required>
+  Mav's unique identifier for this specific play (a single lead's journey through a playbook). Use this to correlate multiple activities belonging to the same play.
+</ResponseField>
+
+<ResponseField name="activity_note" type="string">
+  A human-readable summary of what happened. Useful for logging and support triage.
+</ResponseField>
+
+<ResponseField name="activity_created_at" type="string (ISO 8601)">
+  The UTC timestamp of when the activity occurred, in ISO 8601 format (e.g., `2024-01-15T14:30:00Z`).
+</ResponseField>
+
+### Lead Fields
+
+<ResponseField name="lead_id" type="string" required>
+  Mav's unique identifier for the lead.
+</ResponseField>
+
+<ResponseField name="lead_first_name" type="string">
+  The lead's first name as submitted to Mav.
+</ResponseField>
+
+<ResponseField name="lead_last_name" type="string">
+  The lead's last name as submitted to Mav.
+</ResponseField>
+
+<ResponseField name="lead_email" type="string">
+  The lead's email address.
+</ResponseField>
+
+<ResponseField name="lead_opted_out" type="boolean">
+  `true` if the lead has opted out of messaging (e.g., sent STOP). Always check this field before attempting any further outreach through your own systems.
+</ResponseField>
+
+<ResponseField name="lead_created_at" type="string (ISO 8601)">
+  The UTC timestamp of when the lead was first created in Mav.
+</ResponseField>
+
+<ResponseField name="lead_additional_info" type="array">
+  An array of key-value objects containing playbook-specific data collected on the lead. The keys correspond to your playbook's custom fields.
+
+  <Expandable title="lead_additional_info item">
+    <ResponseField name="key" type="string">
+      The field name (e.g., `current_insurance_carrier`).
+    </ResponseField>
+    <ResponseField name="value" type="string">
+      The field value collected during the playbook conversation or submitted on intake.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="lead_originators" type="array">
+  An array of originator objects that identify where the lead came from. This is the same data you passed on the inbound Marketing Source call — use it to match the activity back to the lead record in your CRM or marketing platform.
+
+  <Expandable title="lead_originators item">
+    <ResponseField name="origin" type="string">
+      The name of the originating source (e.g., the name of your Marketing Source in Mav).
+    </ResponseField>
+    <ResponseField name="key" type="string">
+      The unique identifier for this lead in the originating system — the value you passed as an external ID when submitting the lead.
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+---
+
+## Example Payload
+
+The following is a complete example of an `event` payload for a lead that has qualified:
+
+```json
+{
+  "activity_type": "event",
+  "activity_label": "qualified",
+  "activity_play_id": "ply_abc123xyz",
+  "activity_note": "Lead has qualified to speak with a rep",
+  "activity_created_at": "2024-01-15T14:30:00Z",
+  "lead_id": "ld_def456uvw",
+  "lead_first_name": "Jane",
+  "lead_last_name": "Doe",
+  "lead_email": "jane.doe@example.com",
+  "lead_opted_out": false,
+  "lead_created_at": "2024-01-15T09:00:00Z",
+  "lead_additional_info": [
+    { "key": "current_insurance_carrier", "value": "State Farm" }
+  ],
+  "lead_originators": [
+    { "origin": "source_a", "key": "external-lead-id-789" }
+  ]
+}
+```
+
+---
+
+## Matching Leads Back to Your CRM
+
+The `lead_originators` array is the bridge between Mav and your external systems. When you submit a lead via a Marketing Source, you can include your own internal ID for that lead. Mav echoes it back in every webhook payload for that lead.
+
+For example, if you submit a lead with `"crm_id": "crm-lead-id-456"` as a custom field, or pass it as part of a named originator, you can use the matching `key` value in every webhook to instantly look up and update the corresponding record in your system — no fuzzy matching on name or email required.
+
+<Tip>
+  If your lead source platform supports custom pass-through fields, include your internal lead ID when submitting to Mav. You'll get it back on every webhook, making CRM sync trivial.
+</Tip>
+
+---
+
+## Best Practices
+
+### Use HTTPS
+
+Your webhook endpoint **must** be served over HTTPS. Mav will not deliver payloads to plain HTTP URLs. Use a valid TLS certificate from a trusted CA.
+
+### Respond Quickly with 200
+
+Mav expects your endpoint to return an HTTP `200` status code promptly. Acknowledge the receipt of the payload first, then process it asynchronously. If your endpoint takes too long to respond or returns a non-2xx status, Mav will treat the delivery as failed.
+
+<Warning>
+  If your endpoint consistently fails to respond with a 200, webhook deliveries for that subscription may be paused. Monitor your endpoint's availability and error rates.
+</Warning>
+
+### Design for Idempotency
+
+Network conditions can occasionally cause a payload to be delivered more than once. Design your handler to be idempotent — use `activity_play_id` combined with `activity_label` as a deduplication key so that processing the same payload twice doesn't create duplicate records or trigger duplicate actions.
+
+### Validate the Payload Shape
+
+Always validate that required fields (`activity_type`, `activity_label`, `lead_id`) are present before processing. Unknown or new activity types in the future should be handled gracefully rather than causing errors.
+
+### Log Raw Payloads
+
+Store the raw incoming payload before processing it. This gives you a reliable audit trail and makes debugging much easier if something goes wrong downstream.
+
+---
+
+## Related Pages
+
+- [Event Activities](/api/events) — Full reference of every event `activity_label` Mav can fire.
+- [Outcome Activities](/api/outcomes) — Full reference of every outcome `activity_label` Mav can fire.
+- [Marketing Sources API](/api/marketing-sources-api) — How to submit leads to Mav in the first place.

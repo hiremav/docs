@@ -1,0 +1,109 @@
+{
+  "projectType": "saas",
+  "projectName": "Mav",
+  "projectDescription": "Mav is an AI-powered lead engagement platform that automatically qualifies insurance leads via SMS and connects them to agents through live call transfers.",
+  "theme": "almond",
+  "primaryColor": "#2563EB",
+  "lightColor": "#EFF6FF",
+  "darkColor": "#1E3A8A",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "lead-delivery/import-leads-csv"
+            ]
+          },
+          {
+            "group": "Lead Delivery",
+            "pages": [
+              "lead-delivery/marketing-sources",
+              "lead-delivery/blocked-sources-scrub-services",
+              "lead-delivery/texting-hours"
+            ]
+          },
+          {
+            "group": "Party Line",
+            "pages": [
+              "party-line/overview",
+              "party-line/availability-schedule",
+              "party-line/route-calls",
+              "party-line/completed-calls"
+            ]
+          },
+          {
+            "group": "Analytics & Alerts",
+            "pages": [
+              "analytics/playbook-alerts"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/slack",
+              "integrations/zapier",
+              "integrations/ricochet-360"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Overview",
+            "pages": [
+              "api/overview"
+            ]
+          },
+          {
+            "group": "Outbound API",
+            "pages": [
+              "api/outbound-webhooks",
+              "api/events",
+              "api/outcomes"
+            ]
+          },
+          {
+            "group": "Inbound API",
+            "pages": [
+              "api/marketing-sources-api"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "AI-powered SMS lead engagement via Playbooks",
+    "Party Line live call transfers connecting leads to agents",
+    "CSV lead import with TCPA consent management",
+    "Marketing Sources with custom postURLs for lead tracking",
+    "Outbound webhook API for event and outcome subscriptions",
+    "Zapier integration for connecting to 1000+ apps",
+    "Ricochet 360 CRM integration",
+    "Slack notifications for lead events and outcomes",
+    "Playbook Alerts with webhook delivery for performance monitoring",
+    "Blocked Sources and DNC scrub services for lead quality control",
+    "Dynamic Texting Hours with local time zone support",
+    "Copilot summaries and call transcripts for completed Party Lines"
+  ],
+  "publicApiSurface": [
+    "POST https://hiremav.com/marketing_sources/{account_id}/{source_id} — submit a lead",
+    "Outbound webhook: activity_type, activity_label, activity_play_id, activity_note, activity_created_at",
+    "Outbound webhook: lead_id, lead_first_name, lead_last_name, lead_email, lead_opted_out, lead_created_at, lead_additional_info, lead_originators",
+    "Webhook event: started, double_opted_in, interested, stopped, completed, reengagement_sent",
+    "Webhook event: party_line_lead_attempted, party_line_lead_answered, party_line_rep_attempted, party_line_completed",
+    "Webhook event: catch_all_level1, catch_all_level2, catch_all_level3, copilot_paused, copilot_restarted",
+    "Webhook outcome: callback_requested, not_interested, qualified, unqualified, undeliverable, opted_out, party_line_completed",
+    "Playbook Alert webhook payload: alert.monitor_type, alert.alert_type, alert.alert_metric, metric.*, playbook.*",
+    "Zapier Action: Run Playbook",
+    "Zapier Action: Stop Playbook",
+    "Zapier Trigger: New Event (started, interested, message_received, stopped, completed, qualified, party_line_*)",
+    "Zapier Trigger: New Outcome (unqualified, not_interested, opted_out, undeliverable, party_line_completed)"
+  ]
+}

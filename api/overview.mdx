@@ -1,0 +1,116 @@
+---
+title: "Mav API Overview: Lead Inbound & Outbound Surfaces"
+sidebarTitle: "Overview"
+description: "Mav exposes two API surfaces — submit leads via Marketing Sources and receive real-time playbook activity updates via outbound webhooks."
+---
+
+Mav provides two complementary API surfaces that together give you full programmatic control over your lead pipeline. You push leads into Mav through the **Inbound API** (Marketing Sources), and Mav pushes real-time activity updates back to you through the **Outbound API** (webhooks). Whether you're connecting a lead generation platform, syncing your CRM, or triggering downstream automations, these two surfaces cover the complete lifecycle of a lead in your playbook.
+
+## Two API Surfaces
+
+<CardGroup cols={2}>
+  <Card title="Marketing Sources API" icon="arrow-right-to-bracket" href="/api/marketing-sources-api">
+    Submit leads directly to Mav via a unique POST endpoint tied to your playbook. Supports JSON and form-encoded payloads.
+  </Card>
+  <Card title="Outbound Webhooks" icon="arrow-right-from-bracket" href="/api/outbound-webhooks">
+    Subscribe to real-time event and outcome activity from Mav. Mav posts a JSON payload to your URL whenever something happens on a lead.
+  </Card>
+</CardGroup>
+
+<CardGroup cols={2}>
+  <Card title="Event Activities" icon="bolt" href="/api/events">
+    A reference of every event Mav can fire — from the first message sent through party line calls and copilot interventions.
+  </Card>
+  <Card title="Outcome Activities" icon="flag-checkered" href="/api/outcomes">
+    A reference of every outcome Mav can fire — the terminal states that tell you how a lead's playbook journey ended.
+  </Card>
+</CardGroup>
+
+---
+
+## How the Two Surfaces Work Together
+
+The inbound and outbound APIs are designed to create a closed loop between your systems and Mav:
+
+1. **You submit a lead** — Your marketing platform, CRM, or custom code POSTs lead data to a Marketing Source postURL. Mav immediately enrolls the lead into the associated playbook.
+2. **Mav works the lead** — Mav sends messages, handles responses, and runs the lead through your configured playbook sequences.
+3. **You receive activity updates** — As the lead progresses, Mav fires webhook events and outcomes to your configured endpoint. You update your records, trigger follow-up workflows, or route the lead to a rep.
+
+This flow means you never have to poll Mav for status — everything is push-based and real-time.
+
+---
+
+## Quick-Start Flow
+
+Follow these steps to get leads flowing in and results flowing back out.
+
+### Step 1 — Create a Marketing Source
+
+In the Mav dashboard, navigate to **Integrations → Marketing Sources** and create a new source tied to the playbook you want to use. Mav generates a unique `postURL` for that source.
+
+### Step 2 — Send Your First Lead
+
+POST lead data to your `postURL`. A standard submission requires identity, residence, insurance, and TCPA consent fields. See the [Marketing Sources API](/api/marketing-sources-api) reference for the complete required field list.
+
+```bash
+curl -X POST "https://hiremav.com/marketing_sources/acc_2SbUe8xLqEqrL3/mks_kgaafDRBWshCzp" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@example.com",
+    "phone": "5551234567",
+    "date_of_birth": "1985-04-15",
+    "gender": "Female",
+    "marital_status": "Single",
+    "current_residence_address": "123 Main St",
+    "current_residence_city": "Austin",
+    "current_residence_state": "TX",
+    "current_residence_zip": "78701",
+    "current_insurance_carrier": "State Farm",
+    "current_insurance_coverage": "Full Coverage",
+    "credit_rating": "Good",
+    "tcpa_opt_in_token": "jornaya-token-abc123",
+    "tcpa_opt_in_url": "https://proof.jornaya.com/abc123"
+  }'
+```
+
+### Step 3 — Subscribe to Webhooks
+
+In your playbook settings, add one or more webhook URLs under the **Activity Subscriptions** section. Select the events and outcomes you want to receive — you can subscribe to as many or as few as your workflow requires.
+
+### Step 4 — Handle Incoming Payloads
+
+Your endpoint receives a JSON payload each time a subscribed activity occurs. Use the `lead_originators` fields to match the activity back to the original lead in your system.
+
+```json
+{
+  "activity_type": "outcome",
+  "activity_label": "qualified",
+  "lead_originators": [
+    { "origin": "your_crm", "key": "crm-lead-id-456" }
+  ]
+}
+```
+
+---
+
+## Authentication
+
+| Surface | Credential |
+|---|---|
+| Marketing Sources | The unique `postURL` itself acts as the credential. Keep it private. |
+| Outbound Webhooks | No inbound auth required — Mav posts to your URL. Secure your endpoint with HTTPS and validate the payload structure. |
+| Zapier Integration | Uses your **Mav API Key**, found in **Settings → Integrations**. |
+
+<Note>
+  Your Marketing Source `postURL` contains your account and source identifiers. Treat it like a secret — anyone with the URL can submit leads to that playbook.
+</Note>
+
+---
+
+## Next Steps
+
+- Read the [Marketing Sources API](/api/marketing-sources-api) reference to see the full field list and code examples.
+- Read the [Outbound Webhooks](/api/outbound-webhooks) reference to understand the payload structure and best practices.
+- Browse [Event Activities](/api/events) and [Outcome Activities](/api/outcomes) for a complete list of everything Mav can fire.

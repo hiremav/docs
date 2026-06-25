@@ -1,0 +1,82 @@
+---
+title: "Party Lines Completed: Recordings, Summaries & Exports"
+sidebarTitle: "Completed Calls"
+description: "Review Copilot summaries, recordings, and transcripts of completed Party Line calls, and export call data by date range for reporting or compliance."
+---
+
+The **Party Lines Completed** page in your Mav dashboard gives you a consolidated record of every call that successfully connected a lead and a rep through Party Line. Whether you're evaluating conversation quality, tracking sales outcomes, or pulling data for compliance, this page gives you the tools to do it quickly. This reference covers the Copilot summary feature, how to access full recordings and transcripts, and how to filter and export your call data.
+
+## Copilot Summaries
+
+Every completed Party Line call automatically includes a **Copilot summary** — a concise, AI-generated overview of the conversation that appears directly in the Party Lines Completed list. Copilot summaries are designed to let you assess a call at a glance without having to listen to the full recording.
+
+Each summary captures the key points from the conversation, including topics discussed, any commitments made, and the general outcome of the call. You don't need to configure anything — summaries appear automatically for every completed Party Line.
+
+### Accessing the Full Transcript and Recording
+
+To go deeper than the summary, each Party Line Completed entry includes a link to the full call details:
+
+<Steps>
+  <Step title="Find the Call Entry">
+    On the **Party Lines Completed** page, locate the call you want to review. You can use the date range filter to narrow results if you're looking for a specific call.
+  </Step>
+  <Step title="Open the Full Transcript">
+    Select **Read Full Transcript** on the call entry. This opens the detail view for that call, which includes:
+
+    - A full **written transcript** of the conversation, timestamped and attributed to each speaker
+    - An embedded **call recording** you can play directly in the dashboard
+    - The complete **Copilot summary** in expanded form
+  </Step>
+</Steps>
+
+<Tip>
+  Use the written transcript for compliance reviews or coaching — it's easier to search and highlight specific moments than scrubbing through audio. Pair it with the recording when you need to hear tone or context that text alone doesn't convey.
+</Tip>
+
+## Filtering by Date Range
+
+The Party Lines Completed page defaults to a recent time window, but you can adjust the date range to surface calls from any period.
+
+<Steps>
+  <Step title="Open the Date Range Picker">
+    Click the **date range dropdown** at the top of the Party Lines Completed page.
+  </Step>
+  <Step title="Select Your Dates">
+    Choose a start date and an end date. The list will update to show only completed Party Lines that occurred within that range.
+  </Step>
+</Steps>
+
+## Exporting Call Data
+
+You can export a summary of all Party Lines Completed within a selected date range to a CSV file. This is useful for building reports in Excel or Google Sheets, auditing call volume, or sharing data with compliance or management teams.
+
+<Steps>
+  <Step title="Set Your Date Range">
+    Use the date range picker to define the time period you want to export data for.
+  </Step>
+  <Step title="Select Export to CSV">
+    Click **Export to CSV**. Mav will process the export and send an email to your inbox.
+  </Step>
+  <Step title="Download the File">
+    Open the email from Mav and click the download link to save the CSV file. The link is time-limited, so download it promptly after receiving the email.
+  </Step>
+</Steps>
+
+<Note>
+  The export email is sent to the address associated with your Mav account. If you don't see it within a few minutes, check your spam or promotions folder.
+</Note>
+
+## What Each Completed Entry Contains
+
+| Field | Description |
+|---|---|
+| Lead name | The name of the lead who participated in the call |
+| Rep name | The rep who was bridged into the call |
+| Call date and time | When the Party Line call took place |
+| Call duration | Total length of the connected call |
+| Copilot summary | AI-generated summary of the conversation |
+| Transcript link | Link to the full written transcript and recording |
+
+<Tip>
+  If you're using Party Line data in a CRM or reporting workflow, the CSV export combined with the `party_line_completed` webhook gives you the most complete picture — the webhook fires in real time with outcome data, while the CSV export gives you a bulk historical view.
+</Tip>

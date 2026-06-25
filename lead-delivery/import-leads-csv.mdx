@@ -1,0 +1,103 @@
+---
+title: "Import Insurance Leads into a Mav Playbook via CSV"
+sidebarTitle: "Import via CSV"
+description: "Upload a bulk list of auto or home insurance leads into a Mav playbook, with column mapping, daily pacing limits, and TCPA consent confirmation."
+---
+
+The CSV import tool lets you upload a prepared list of auto or home insurance leads directly into a Mav playbook. This page covers everything you need to complete a successful import—from preparing your file and confirming TCPA consent, to mapping columns, previewing results, and tracking the import's progress.
+
+<Warning>
+  Every lead in your CSV must have given written or electronic consent to be contacted via automated SMS messages and voice calls before you upload the file. The TCPA Consent confirmation step is required and cannot be skipped.
+</Warning>
+
+## What you'll need
+
+- A CSV file containing your auto or home insurance leads
+- The playbook you want these leads assigned to
+- Confirmation that every lead in the file has provided proper TCPA consent
+
+## Step 1: Choose insurance type and playbook
+
+<Steps>
+  <Step title="Open the Imports page">
+    Navigate to **Settings → Imports** and click **New Import**.
+  </Step>
+  <Step title="Select insurance type">
+    Choose **Auto** or **Home** to match the leads in your file.
+  </Step>
+  <Step title="Download a template (optional)">
+    Click the **Auto** or **Home** template link to download a CSV with all supported column headers pre-filled. Use this as a starting point if you're building your file from scratch.
+  </Step>
+  <Step title="Choose a playbook">
+    Select the playbook you want these leads assigned to. Only playbooks that match your selected insurance type will appear in the list.
+  </Step>
+  <Step title="Confirm TCPA consent">
+    Toggle the **TCPA Consent** switch to confirm that every lead in your file has provided proper consent. This step is required—you cannot proceed without it.
+  </Step>
+  <Step title="Continue">
+    Click **Continue** to move to the upload step.
+  </Step>
+</Steps>
+
+## Step 2: Upload your file and map columns
+
+<Steps>
+  <Step title="Select your file">
+    Click the file picker and select your CSV from your computer.
+  </Step>
+  <Step title="Review the column mapping table">
+    Once your file is uploaded, Mav reads the column headers and displays a mapping table. Each row in the table represents one of your columns—review them to make sure each one is mapped to the correct Mav field.
+  </Step>
+  <Step title="Map the Phone column">
+    At minimum, one column must be mapped to **Phone**. The import cannot proceed without a phone mapping.
+  </Step>
+  <Step title="Continue">
+    Click **Continue** when your mapping is complete.
+  </Step>
+</Steps>
+
+<Tip>
+  If your CSV headers already match Mav's field names (e.g., `phone`, `first_name`, `email`), Mav will auto-map them for you—just review and confirm.
+</Tip>
+
+## Step 3: Preview and confirm
+
+<Steps>
+  <Step title="Review the preview panel">
+    The preview panel shows the total number of leads detected in your file and a sample of the first lead so you can spot any mapping mistakes before committing.
+  </Step>
+  <Step title="Start the import">
+    If everything looks correct, click **Start Import**. Mav begins processing your leads immediately.
+  </Step>
+</Steps>
+
+## Daily limits and scheduling
+
+Imports are capped at **500 leads per account, per day**. If your file contains more than 500 leads, Mav processes the first 500 and automatically defers the remainder. Deferred leads are released the following business morning without any action required on your part.
+
+<Note>
+  If you regularly import large files, plan your uploads so that deferred leads land in playbooks on the days you intend. Consider splitting very large files across multiple days for more control over pacing.
+</Note>
+
+## Tracking the status of an import
+
+Navigate to **Settings → Imports** to see the status and progress of any import.
+
+| Status | Meaning |
+|--------|---------|
+| **New** | The import has been created but processing has not started yet. |
+| **Importing** | Mav is actively processing rows from your file. |
+| **Deferred** | The file exceeded the daily limit; remaining leads are queued for the next business morning. |
+| **Finished** | All rows have been processed successfully. |
+| **Failed** | The import encountered an error. A **Retry** button appears—clicking it resumes the import from where it left off. |
+
+The progress bar shows how many rows have been processed. Import stats break down results into:
+
+- **Successful imports** — leads added to the playbook
+- **Duplicates** — leads that already exist in your account
+- **Missing phone** — rows skipped because no phone number was found
+- **Row errors** — individual rows that failed for other reasons
+
+## How imported leads appear in Mav
+
+Every lead brought in through a CSV import is tagged with the source label **Manual Import – YYYY-MM-DD**, where the date reflects the day the import was created. This tag appears in lead records and reporting so you can filter and attribute CSV imports separately from your real-time marketing sources.

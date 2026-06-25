@@ -1,0 +1,142 @@
+---
+title: "Outcome Activities: Mav Playbook Webhook Outcome Reference"
+sidebarTitle: "Outcomes"
+description: "Complete reference for every outcome activity Mav fires via webhook — the terminal states that tell you how each lead's playbook journey ended."
+---
+
+Outcomes are the final verdict on a lead's journey through a Mav playbook. Where [events](/api/events) fire at moments along the way, an outcome fires once — when the playbook reaches a definitive conclusion for that lead. This could mean the lead qualified and got connected to a rep, opted out, or turned out to be unreachable. Whatever the result, the outcome is the signal your downstream systems should act on to update lead status, route to sales, suppress future outreach, or trigger reporting.
+
+Every outcome is delivered as a standard [webhook payload](/api/outbound-webhooks) with `activity_type` set to `"outcome"` and `activity_label` set to the outcome name.
+
+---
+
+## Outcomes Are Playbook-Specific
+
+Unlike events, which are shared across all playbooks, outcomes are defined by your specific playbook configuration. The table below reflects the outcomes available in a typical **Mortgage Qualification** playbook. Your playbook may include a subset of these, additional custom outcomes, or different labels depending on how your playbook was built.
+
+<Note>
+  Contact your Mav account team if you need to understand exactly which outcomes are configured for your playbook, or to add new ones.
+</Note>
+
+---
+
+## Standard Outcome Reference
+
+| Outcome | Description | What Triggers It |
+|---|---|---|
+| `callback_requested` | The lead has requested a call back from a rep. | Lead explicitly asks for a callback during the conversation. |
+| `interested` | The lead initially responded and expressed engagement. | Lead replies positively to the opening message. |
+| `not_interested` | The lead stated they are not interested. | Lead explicitly declines to continue. |
+| `party_line_completed` | The lead and rep successfully finished a party line call. | Both parties joined and the call completed. |
+| `qualified` | The lead has qualified to speak with a rep on a Party Line. | Lead meets the playbook's qualification criteria. |
+| `unqualified` | The lead stated something that disqualifies them from coverage. | Lead's responses indicate they do not meet the qualification criteria (e.g., wrong coverage type, outside service area). |
+| `undeliverable` | Messages could not be delivered to the phone number provided. | Carrier-level delivery failure on the lead's number. |
+| `opted_out` | The lead opted out of messaging. | Lead sends `STOP` or similar opt-out keyword. |
+| `undeliverable_rejected` | The carrier rejected messages to this number. | Carrier actively rejected delivery, not just failed. *(Available via Zapier integration.)* |
+
+---
+
+## Understanding Key Outcomes
+
+### `qualified` vs `callback_requested`
+
+Both of these are positive outcomes, but they represent different paths to a rep:
+
+- **`qualified`** — Mav ran the lead through the full qualification sequence and they passed. Typically followed by a party line attempt to connect them with a rep immediately.
+- **`callback_requested`** — The lead asked to be called back at a specific time or simply prefers a call over messaging. A rep should follow up proactively.
+
+### `opted_out` and `undeliverable`
+
+These outcomes require you to suppress the lead from future outreach:
+
+- **`opted_out`** — The lead sent a STOP keyword or equivalent. Under TCPA, you must not contact this lead again without fresh consent.
+- **`undeliverable`** — The number is invalid or unreachable. Remove it from your active lead pool.
+- **`undeliverable_rejected`** — Similar to `undeliverable`, but the carrier is actively blocking messages to this number. Treat the same as `undeliverable` for suppression purposes.
+
+<Warning>
+  When you receive an `opted_out` outcome, you must suppress that lead from any further outreach in your own systems as well. TCPA compliance is a shared responsibility — Mav suppresses the lead on its side, but your CRM and marketing platforms need to be updated too.
+</Warning>
+
+---
+
+## Outcome Payload Example
+
+The following is a complete webhook payload example for the `qualified` outcome:
+
+```json
+{
+  "activity_type": "outcome",
+  "activity_label": "qualified",
+  "activity_play_id": "ply_abc123xyz",
+  "activity_note": "Lead has qualified to speak with a rep on a Party Line",
+  "activity_created_at": "2024-01-15T14:30:00Z",
+  "lead_id": "ld_def456uvw",
+  "lead_first_name": "Jane",
+  "lead_last_name": "Doe",
+  "lead_email": "jane.doe@example.com",
+  "lead_opted_out": false,
+  "lead_created_at": "2024-01-15T09:00:00Z",
+  "lead_additional_info": [
+    { "key": "current_insurance_carrier", "value": "State Farm" },
+    { "key": "credit_rating", "value": "Good" }
+  ],
+  "lead_originators": [
+    { "origin": "facebook_leads", "key": "crm-lead-id-456" }
+  ]
+}
+```
+
+---
+
+## Updating Your CRM on Outcomes
+
+The most common integration pattern is to listen for outcome webhooks and use them to drive CRM updates. Here's a practical approach using `lead_originators` to match the lead:
+
+```javascript
+app.post('/mav-webhook', (req, res) => {
+  res.sendStatus(200); // Acknowledge immediately
+
+  const payload = req.body;
+
+  // Only act on outcomes
+  if (payload.activity_type !== 'outcome') return;
+
+  // Find the lead in your CRM using the originator key
+  const originator = payload.lead_originators?.[0];
+  const crmLeadId = originator?.key;
+
+  switch (payload.activity_label) {
+    case 'qualified':
+      crm.updateLead(crmLeadId, { status: 'Qualified', route_to_sales: true });
+      break;
+    case 'callback_requested':
+      crm.updateLead(crmLeadId, { status: 'Callback Requested' });
+      crm.createTask(crmLeadId, { type: 'Call', due: 'today' });
+      break;
+    case 'not_interested':
+      crm.updateLead(crmLeadId, { status: 'Not Interested', suppress: true });
+      break;
+    case 'opted_out':
+      crm.updateLead(crmLeadId, { status: 'Opted Out', suppress: true, tcpa_suppressed: true });
+      break;
+    case 'undeliverable':
+    case 'undeliverable_rejected':
+      crm.updateLead(crmLeadId, { status: 'Bad Number', suppress: true });
+      break;
+    default:
+      console.log(`Unhandled outcome: ${payload.activity_label}`);
+  }
+});
+```
+
+<Tip>
+  Always handle the `default` case in your outcome switch. Mav may introduce new outcomes over time, and gracefully ignoring unknown labels keeps your integration resilient without breaking.
+</Tip>
+
+---
+
+## Related Pages
+
+- [Event Activities](/api/events) — Milestone events that fire throughout the playbook journey.
+- [Outbound Webhooks](/api/outbound-webhooks) — Full payload reference and delivery best practices.
+- [Marketing Sources API](/api/marketing-sources-api) — Submit leads to Mav and pass originator IDs for CRM matching.

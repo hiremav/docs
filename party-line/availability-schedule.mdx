@@ -1,0 +1,64 @@
+---
+title: "Setting Your Party Line Availability Schedule in Mav"
+sidebarTitle: "Availability Schedule"
+description: "Configure days and hours for Mav's Party Line live transfers so reps are only called when they're actually available to take the call."
+---
+
+Mav's Party Line Availability Schedule gives you precise control over when live call transfers are attempted. Rather than letting Mav try to bridge calls at any hour, you define the days and time windows when your team is ready to pick up. This page walks you through how to configure your availability schedule inside the Mav dashboard.
+
+<Note>
+  The availability schedule controls when Mav *attempts* a transfer. You must also make sure that agent availability is turned on in your dashboard — the schedule alone is not enough. If the availability toggle is off, no transfers will be attempted even during your scheduled hours.
+</Note>
+
+## Configuring Your Schedule
+
+<Steps>
+  <Step title="Open Party Line Settings">
+    Log in to your Mav dashboard and navigate to **Settings → Party Line**.
+  </Step>
+  <Step title="Click on Availability">
+    Inside the Party Line settings, select **Availability**. This opens a weekly schedule view showing all seven days of the week.
+  </Step>
+  <Step title="Select Your Available Days">
+    On the left side of the schedule, toggle on the days when you or your team are available to take live transfers. Days that are toggled off will not trigger any Party Line transfer attempts.
+  </Step>
+  <Step title="Set Your Hours">
+    For each enabled day, set the **start time** and **end time** for your availability window. If you're available for the entire day, you can select **All Day** instead of specifying a time range.
+
+    <Tip>
+      If your team works shifts or has different hours on different days (for example, shorter hours on Fridays), you can set a unique time range per day rather than applying a single window across the week.
+    </Tip>
+  </Step>
+  <Step title="Save Your Schedule">
+    Once you've configured your days and hours, save your changes. Mav will immediately begin respecting your new schedule for all future Party Line transfer attempts.
+  </Step>
+</Steps>
+
+## Enabling Agent Availability
+
+The availability schedule defines *when* transfers can happen, but agent availability determines *whether* they happen at all. Both settings must be active for Party Line to work.
+
+To enable agent availability:
+
+1. Go to **Settings → Party Line** in your dashboard.
+2. Locate the **Agent Availability** toggle.
+3. Make sure it is switched **on**.
+
+<Warning>
+  If agent availability is turned off, Mav will not attempt any live transfers — even if your schedule shows the current time as available. Always confirm both settings are active before expecting transfers to go through.
+</Warning>
+
+## How Mav Uses Your Schedule
+
+When a lead qualifies for a Party Line transfer, Mav checks the current day and time against your availability schedule before attempting the call. Here's what happens in each scenario:
+
+| Scenario | Mav's Behavior |
+|---|---|
+| Current time is within your scheduled window and availability is on | Mav proceeds with the transfer attempt |
+| Current time is outside your scheduled window | Mav does not attempt the transfer; the SMS playbook continues |
+| Availability toggle is off (regardless of schedule) | Mav does not attempt the transfer |
+| No schedule is configured | Mav uses availability toggle status only |
+
+<Tip>
+  If you frequently miss leads outside business hours, consider pairing your availability schedule with a follow-up SMS step in your playbook — this way leads who can't be transferred right away still receive a message letting them know when to expect a call.
+</Tip>

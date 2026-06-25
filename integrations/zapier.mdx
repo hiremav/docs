@@ -1,0 +1,69 @@
+---
+title: "Zapier Integration: Automate Mav with 5,000+ Apps"
+sidebarTitle: "Zapier"
+description: "Use Mav's Zapier app to connect lead playbooks with Salesforce, HubSpot, and thousands of other tools via trigger and action events."
+---
+
+Mav's Zapier integration lets you connect Mav to thousands of other online services — including Salesforce, HubSpot, and more — without writing any code. You can use Mav as a trigger to react to lead activity, or as an action to start and stop playbooks from other apps. The Mav Zapier app is currently at **version 3.0**.
+
+## Setting Up the Integration
+
+<Steps>
+  <Step title="Enable the Mav Zapier app">
+    Inside your Zapier account, click to enable the Mav Zapier app.
+  </Step>
+  <Step title="Authenticate with your Mav API Key">
+    Both Triggers and Actions require authentication. Find your API Key in the Mav dashboard, then paste it into the Zapier authentication window.
+  </Step>
+  <Step title="Configure Action Events (Inbound)">
+    Use Actions to send instructions **to** Mav from another app:
+
+    | Action | What it does |
+    |---|---|
+    | **Run Playbook** | Provide lead information to start a playbook |
+    | **Stop Playbook** | Stop a running playbook by passing the lead's phone number |
+  </Step>
+  <Step title="Configure Trigger Events (Outbound)">
+    Mav fires Triggers whenever a lead activity occurs. There are two trigger types: **New Event** and **New Outcome**.
+  </Step>
+</Steps>
+
+## Trigger Reference
+
+### New Event
+
+Fires on conversational and behavioral milestones during a playbook.
+
+| Event | Description |
+|---|---|
+| `started` | Lead entered a playbook |
+| `interested` | Lead expressed interest |
+| `message_received` | Inbound message received from lead |
+| `stopped` | Playbook stopped for this lead |
+| `completed` | Lead reached the end of the playbook |
+| `reengagement_sent` | A re-engagement message was sent |
+| `qualified` | Lead was marked as qualified |
+| `talk_to_human` | Lead requested to speak with a human |
+| `talk_to_human_spanish` | Lead requested a Spanish-speaking human |
+| `party_line_available` | Party line call is available |
+| `party_line_unavailable` | Party line call could not be connected |
+| `party_line_lead_attempted` | Party line call to lead was attempted |
+| `party_line_lead_unsuccessful` | Party line call to lead did not connect |
+| `party_line_lead_answered` | Lead answered the party line call |
+| `party_line_rep_attempted` | Party line call to rep was attempted |
+| `party_line_rep_unsuccessful` | Party line call to rep did not connect |
+| `party_line_lead_initiated_call` | Lead initiated a party line call |
+| `party_line_lead_initiated_call_unsuccessful` | Lead-initiated call did not connect |
+
+### New Outcome
+
+Fires when a lead reaches a definitive result.
+
+| Outcome | Description |
+|---|---|
+| `unqualified` | Lead was marked as unqualified |
+| `not_interested` | Lead indicated no interest |
+| `opted_out` | Lead opted out of messages |
+| `undeliverable` | Lead's phone number is undeliverable |
+| `undeliverable_rejected` | Carrier rejected messages to this lead |
+| `party_line_completed` | Party line call completed successfully |

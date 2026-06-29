@@ -1,0 +1,41 @@
+---
+title: "Importing Contacts into Mav.next via CSV"
+sidebarTitle: "Importing contacts"
+description: "Bulk-load contacts into Mav.next from a CSV — map your columns, confirm TCPA consent, respect daily limits, and retry or cancel an import."
+---
+
+Already have a list of leads? Import them in bulk from a CSV and Mav.next will start working them with the agent you choose.
+
+## Running an import
+
+<Steps>
+  <Step title="Upload your CSV">
+    Under **Settings → Imports**, start a new import and upload your file. A template is available if you want the expected format.
+  </Step>
+  <Step title="Map your columns">
+    Match your spreadsheet's columns to Mav fields — name, phone, email, and any extra details. Mav remembers your mapping so repeat imports are quick.
+  </Step>
+  <Step title="Confirm consent">
+    Toggle the **TCPA consent** confirmation. An import can't proceed until you confirm every contact has consented to be messaged.
+  </Step>
+  <Step title="Choose the agent">
+    Select which [agent](/mav-next/agents-overview) should work the imported contacts.
+  </Step>
+  <Step title="Run it">
+    Mav validates and loads your contacts, applying the same [compliance checks](/mav-next/scrubs-dnc-blocked-numbers) as any other lead.
+  </Step>
+</Steps>
+
+## Daily limits and pacing
+
+To protect deliverability and stay within sensible sending limits, imports are paced at up to **500 contacts per day** per account. Larger files are accepted and the remainder is automatically picked up on following days.
+
+## Managing an import
+
+- **Track progress** — each import shows its status and how many contacts were processed, skipped (e.g. missing phone or duplicates), or queued.
+- **Retry** — re-run an import that hit an error.
+- **Cancel** — stop an in-progress import you no longer want.
+
+<Warning>
+  Only import contacts who have given TCPA consent to be contacted by automated SMS and calls. You confirm this consent as part of every import. See [TCPA & consent](/mav-next/tcpa-and-consent).
+</Warning>

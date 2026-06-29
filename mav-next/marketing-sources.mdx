@@ -1,0 +1,50 @@
+---
+title: "Marketing Sources: Connect Lead Vendors to Mav.next"
+sidebarTitle: "Marketing sources"
+description: "Connect your lead vendors and web forms to Mav.next with a marketing source — get a dedicated submission URL, route leads to the right agent, and verify delivery."
+---
+
+A **marketing source** is how leads get into Mav.next from the outside world — a lead vendor, an aggregator, or your own web form. Each source has a dedicated submission URL, so every lead arrives already tagged with where it came from and routed to the agent that should work it.
+
+This is the primary way to integrate an external system with Mav.next.
+
+## How it works
+
+<Steps>
+  <Step title="Create a marketing source">
+    In **Lead Sources**, add a source. Pick a **featured** provider (a vendor Mav already knows how to parse) or create a **custom** source for your own form or an unlisted vendor.
+  </Step>
+  <Step title="Get your submission URL">
+    Each source has a unique URL that identifies your account and that specific source. You give this URL to your vendor or wire it into your web form's submission.
+  </Step>
+  <Step title="Assign an agent">
+    Choose which [agent](/mav-next/agents-overview) should work leads from this source. New leads automatically start a conversation with that agent.
+  </Step>
+  <Step title="Send a lead">
+    Your vendor posts lead data — name, phone, email, and any extra context — to the URL. Mav creates the contact, applies your [compliance checks](/mav-next/scrubs-dnc-blocked-numbers), and the agent reaches out.
+  </Step>
+</Steps>
+
+## What a source sends
+
+At minimum, a lead submission should include the contact's **name** and **phone number**; **email** and any additional details (like vehicle or address info) help the agent qualify faster. Because consent is required, include your proof-of-consent details (such as a TCPA opt-in token and the URL where consent was captured) with each lead.
+
+<Note>
+  Mav.next accepts lead submissions in standard web formats. Your Mav contact can provide the exact field reference for your provider or custom form when you set the source up.
+</Note>
+
+## Verifying delivery
+
+Every submission to a source is logged. Use the **webhook logs** for a source to confirm leads are arriving, inspect exactly what was sent, and troubleshoot a vendor's payload if something looks off.
+
+<Tip>
+  Send one test lead from your vendor and watch it appear in the webhook log and then as a new [contact](/mav-next/contacts-overview). That round-trip confirms the integration end to end.
+</Tip>
+
+## Tagging and attribution
+
+Because every lead is tagged with its source, you can measure which vendors and campaigns actually produce qualified, converting leads — pair this with [agent metrics](/mav-next/agent-metrics) and the [conversion filter](/mav-next/filtering-contacts).
+
+## Blocking a bad source
+
+If a source starts sending poor-quality or non-consented leads, you can block it so its submissions are rejected. See [Scrubs & blocking](/mav-next/scrubs-dnc-blocked-numbers).

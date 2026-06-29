@@ -1,0 +1,30 @@
+---
+title: "Opt-Out & HELP Keywords in Mav.next"
+sidebarTitle: "Opt-out & HELP"
+description: "How Mav.next handles STOP and HELP keywords — including soft opt-out detection and English/Spanish support — to keep your messaging compliant."
+---
+
+Honoring opt-out and help requests is non-negotiable. Mav.next handles both automatically for every customer-facing agent — you don't have to configure anything.
+
+## STOP and opt-out
+
+When a contact replies with a standard opt-out keyword, Mav immediately unsubscribes them, sends the required confirmation, and stops all further outreach on that conversation.
+
+- **Exact keywords** are recognized in **English and Spanish** — for example _stop, quit, cancel, unsubscribe, revoke_ and _para, salir, cancelar, revocar_, plus phrases like “opt out” / “darse de baja.”
+- **Soft opt-outs** are caught too. If a contact clearly wants out in their own words — “leave me alone,” “wrong number,” “stop texting me” — the agent recognizes the intent and opts them out, even without an exact keyword.
+
+<Warning>
+  Once a contact opts out, Mav.next will not message them again on that conversation. This is enforced automatically and cannot be overridden from the agent.
+</Warning>
+
+## HELP
+
+When a contact texts **HELP**, Mav replies with a support response so they know how to reach you. The exchange doesn't derail the agent's conversation.
+
+## The first-message footer
+
+The first outbound SMS of every conversation carries the rate/HELP/STOP disclosure, so contacts always know how to get help or unsubscribe. See [TCPA & consent](/mav-next/tcpa-and-consent).
+
+<Tip>
+  You can verify all of this yourself with [Send a test](/mav-next/testing-an-agent) — reply STOP or HELP to your test conversation and watch the agent respond correctly.
+</Tip>

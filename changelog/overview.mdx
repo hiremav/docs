@@ -1,0 +1,33 @@
+---
+title: "Changelog"
+sidebarTitle: "Changelog"
+description: "New features, updates, and fixes to the Mav platform."
+---
+
+<Update label="July 1, 2026">
+
+## New features
+
+- **Home Insurance agent.** Mav can now qualify home insurance leads end‑to‑end via SMS and voice, alongside the existing auto agent. Home + auto accounts are routed automatically.
+- **HELP keyword on SMS.** Contacts who text `HELP` now receive a standard compliance response from Mav, matching carrier requirements.
+- **Text "call me" to trigger a call.** A qualified contact can reply with "call me" (and similar phrases) to have Mav initiate the [Party Line](/party-line/overview) transfer immediately, without waiting for the next scheduled step.
+- **Conversation Instructions.** You can now set per‑agent conversation instructions to steer tone, style, and behavior without changing the underlying playbook.
+- **Phone Settings for agents.** Configure the outbound DID and outbound call sequence directly on each agent from Settings.
+- **Rep‑side call recording in the contact feed.** The Party Line rep‑leg recording now appears inline in the [completed call](/party-line/completed-calls) entry on the contact page—no need to open a separate view.
+- **Phone call filters on Contacts.** Filter the Contacts list by phone‑call state (received, connected, completed, missed, transferred) to quickly find calls that need follow‑up.
+- **Contact Support button.** Every contact detail page now has a one‑click Contact Support button that opens a support request pre‑populated with the contact context.
+
+## Updates
+
+- **The auto agent no longer asks for email.** To reduce friction on qualification, Mav stops asking contacts for their email. Any email already on file is preserved.
+- **Unified re‑engagement across SMS and voice.** Re‑engagement now uses a single, consistent prompt on both channels so contacts hear one voice from Mav.
+- **Carrier opt‑outs honored automatically.** When a carrier reports a delivery failure that signals an opt‑out, Mav opts the contact out silently and marks the number undeliverable.
+- **Admin‑only deletion for Next agents.** Deleting an agent is now restricted to account admins.
+
+## Bug fixes
+
+- **Re‑engagement first nudge timing.** Fixed a boundary case where the first re‑engagement nudge could slip to roughly two hours instead of one.
+- **Shared‑number inbound routing.** When multiple contacts share an inbound number, Mav now guarantees a single active engagement per contact so replies land on the right conversation.
+- **Voicemail screening on Party Line.** Voicemail detection on outbound legs now matches the previous behavior, preventing false connects when the lead's line goes to voicemail.
+
+</Update>

@@ -41,74 +41,76 @@
         "tab": "Documentation",
         "groups": [
           {
-            "group": "Get Started",
+            "group": "Getting Started",
             "icon": "rocket",
             "pages": [
-              "introduction",
-              "lead-delivery/import-leads-csv"
+              "mav-next/introduction",
+              "mav-next/how-mav-works",
+              "mav-next/quickstart"
             ]
           },
           {
-            "group": "Lead Delivery",
-            "icon": "users",
+            "group": "Agents",
+            "icon": "robot",
             "pages": [
-              "lead-delivery/marketing-sources",
-              "lead-delivery/blocked-sources-scrub-services",
-              "lead-delivery/texting-hours"
+              "mav-next/agents-overview",
+              "mav-next/configuring-an-agent",
+              "mav-next/re-engagement",
+              "mav-next/testing-an-agent",
+              "mav-next/agent-metrics"
             ]
           },
           {
-            "group": "Party Line",
-            "icon": "phone-call",
+            "group": "Contacts",
+            "icon": "address-book",
             "pages": [
-              "party-line/overview",
-              "party-line/availability-schedule",
-              "party-line/route-calls",
-              "party-line/completed-calls"
+              "mav-next/contacts-overview",
+              "mav-next/filtering-contacts",
+              "mav-next/call-recordings",
+              "mav-next/converting-a-contact"
             ]
           },
           {
-            "group": "Analytics & Alerts",
-            "icon": "chart-bar",
+            "group": "Conversations & Channels",
+            "icon": "comments",
             "pages": [
-              "analytics/playbook-alerts"
+              "mav-next/sms",
+              "mav-next/voice",
+              "mav-next/rep-transfers"
             ]
           },
           {
-            "group": "Integrations",
-            "icon": "plug",
+            "group": "Compliance",
+            "icon": "shield-check",
             "pages": [
-              "integrations/slack",
-              "integrations/zapier",
-              "integrations/ricochet-360"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "Overview",
-            "icon": "book-open",
-            "pages": [
-              "api/overview"
+              "mav-next/tcpa-and-consent",
+              "mav-next/opt-out-and-help",
+              "mav-next/scrubs-dnc-blocked-numbers",
+              "mav-next/state-rules"
             ]
           },
           {
-            "group": "Outbound API",
-            "icon": "webhook",
+            "group": "Lead Sources & Routing",
+            "icon": "share-nodes",
             "pages": [
-              "api/outbound-webhooks",
-              "api/events",
-              "api/outcomes"
+              "mav-next/marketing-sources",
+              "mav-next/lead-boxes"
             ]
           },
           {
-            "group": "Inbound API",
-            "icon": "arrow-down-to-line",
+            "group": "Importing & Exporting",
+            "icon": "file-import",
             "pages": [
-              "api/marketing-sources-api"
+              "mav-next/importing-contacts",
+              "mav-next/exporting-contacts"
+            ]
+          },
+          {
+            "group": "Settings",
+            "icon": "gear",
+            "pages": [
+              "mav-next/account-and-transfer-hours",
+              "mav-next/users-and-roles"
             ]
           }
         ]

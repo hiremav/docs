@@ -1,0 +1,55 @@
+---
+title: "How Mav.next Works: Agents, Contacts, and Outcomes"
+sidebarTitle: "How Mav.next works"
+description: "Understand the core concepts behind Mav.next — agents, contacts, conversations, channels, and outcomes — and follow a lead's journey from arrival to a closed outcome."
+---
+
+Mav.next is built around a small set of concepts. Once you know these five words, the rest of the product is easy to navigate.
+
+## The five core concepts
+
+<CardGroup cols={2}>
+  <Card title="Agent" icon="robot">
+    The AI worker. An agent has a persona, a set of instructions, and the qualifying questions it asks. You assign an agent to your incoming leads.
+  </Card>
+
+  <Card title="Contact" icon="address-book">
+    A person the agent is working — their name, phone, email, and everything the agent learns about them. One contact can be worked many times over.
+  </Card>
+
+  <Card title="Conversation" icon="comments">
+    A single engagement between an agent and a contact, working toward one goal (e.g. a quote). It can span both SMS and a phone call as one continuous thread.
+  </Card>
+
+  <Card title="Channel" icon="signal-stream">
+    How the agent communicates — SMS or a live phone call. A single conversation can move between channels without losing context.
+  </Card>
+
+  <Card title="Outcome" icon="flag-checkered">
+    The result of a conversation — qualified, quoted, sold, not interested, or opted out. Outcomes flow into your reporting and integrations.
+  </Card>
+</CardGroup>
+
+## A lead's journey
+
+<Steps>
+  <Step title="A lead arrives">
+    A lead comes in from a [marketing source](/mav-next/marketing-sources), a [CSV import](/mav-next/importing-contacts), or an integration. It becomes a **contact**, and the **agent** you've assigned starts a conversation.
+  </Step>
+  <Step title="Mav checks consent and quality">
+    Before reaching out, Mav.next confirms the contact can be messaged — valid mobile number, SMS consent, and not on a [suppression or blocked list](/mav-next/scrubs-dnc-blocked-numbers). Leads that fail are filtered out.
+  </Step>
+  <Step title="The agent engages over SMS">
+    The agent sends its first text within your texting hours, then qualifies the contact in a natural back-and-forth — asking questions, handling replies, and [re-engaging](/mav-next/re-engagement) if they go quiet.
+  </Step>
+  <Step title="It moves to voice when useful">
+    When the contact is ready — or texts “call me” — the agent can place a [phone call](/mav-next/voice) and [transfer them live to a rep](/mav-next/rep-transfers), then return to SMS afterward.
+  </Step>
+  <Step title="An outcome is recorded">
+    As the conversation progresses, Mav records outcomes — qualified, quoted, sold, not interested — and surfaces them on the [contact](/mav-next/contacts-overview) and in your reporting.
+  </Step>
+</Steps>
+
+<Note>
+  The agent remembers the entire history of a conversation, across both SMS and voice. Nothing is repeated or lost when a contact moves from texting to a call and back.
+</Note>

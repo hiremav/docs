@@ -114,6 +114,18 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "Changelog",
+        "groups": [
+          {
+            "group": "Changelog",
+            "icon": "sparkles",
+            "pages": [
+              "changelog/overview"
+            ]
+          }
+        ]
       }
     ]
   },

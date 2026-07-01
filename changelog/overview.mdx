@@ -1,0 +1,68 @@
+---
+title: "Changelog"
+sidebarTitle: "Overview"
+description: "New features, updates, and fixes shipped in Mav."
+mode: "center"
+---
+
+<Update label="July 1, 2026">
+
+## New features
+
+**Home Insurance agent**
+A prebuilt Home Insurance vertical is now available alongside Auto. Home agents qualify homeowners with home-specific questions and use insured-home address wording throughout the conversation. See [Agents overview](/mav-next/agents-overview).
+
+**"Call me" trigger in SMS**
+Leads can now text "call me" (or similar) at any point in an SMS conversation and Mav will place the call — before or after qualification, and without opting the contact out. Try it from the agent's [Send a test](/mav-next/testing-an-agent) panel with the new voice test option.
+
+**Phone Settings**
+The old Transfer Hours page has been replaced by a new **Phone Settings** section under Mav.next settings, with two tabs:
+- **Setup** — outbound calling toggle (gated by the TCPA acknowledgment), DID number, and Contact Caller ID toggle (now on by default).
+- **Hours** — the transfer hours schedule, unchanged.
+
+See [Account & transfer hours](/mav-next/account-and-transfer-hours).
+
+**Rep ↔ lead transcripts in the conversation view**
+After a live transfer bridges the rep in, both sides of the rep-and-lead conversation are now transcribed and shown inline in the contact feed, attributed per speaker. Great for coaching and post-call review. See [Rep transfers](/mav-next/rep-transfers).
+
+**Contact Support button on contact detail**
+Every contact detail page now has a **Contact Support** button pinned to the bottom that opens a pre-filled email to support with the conversation link and your session details already attached.
+
+**PhoneCall filters on the Contacts page**
+Filter contacts by call outcome, direction, and duration alongside the existing filters. See [Filtering contacts](/mav-next/filtering-contacts).
+
+## Updates
+
+**Unified re-engagement across SMS and voice**
+Re-engagement nudges are now dual-channel: each nudge can send an SMS and place a follow-up call, driven by one shared cadence. The channel mix (SMS-only, voice-only, or both) is chosen per cycle based on your account policy. Calls are placed 5–10 minutes after the text rather than at the same instant, and every attempt — text or call — counts against the daily contact-attempt cap. See [Re-engagement](/mav-next/re-engagement).
+
+**HELP keyword on SMS**
+Mav.next now handles the SMS **HELP** keyword natively, in addition to the existing STOP flow. See [Opt-out & HELP](/mav-next/opt-out-and-help).
+
+**Auto agent no longer asks for email**
+The Auto agent has stopped asking leads for their email mid-conversation. Email already on the lead profile is preserved; the agent simply skips the question to reduce friction.
+
+**Conversation Instructions**
+The separate Persona and Instructions overrides on an agent have been merged into a single **Conversation Instructions** field that shapes both the initial flow and re-engagement messages. Existing content is preserved. See [Configuring an agent](/mav-next/configuring-an-agent).
+
+**Rep-side recording shown inline**
+The rep-side call recording (rep ringing + whisper) now appears directly on the phone-call card in the contact feed, next to the main recording, instead of only in the sidebar roll-up. See [Call recordings](/mav-next/call-recordings).
+
+**Deleting an agent is now admin-only**
+Only admins can delete a Mav.next agent. Account managers keep the ability to update, duplicate, and test agents. The Delete button is hidden for non-admins. See [Users & roles](/mav-next/users-and-roles).
+
+**Cleaner new-agent form**
+The new-agent form has been streamlined: the SMS/voice channel setup and tools sections have been removed from creation. The Lead Box form now supports select-all.
+
+## Fixes
+
+**Voicemail detection**
+Fixed a case where the agent's own voicemail-greeting sign-off ("...get back to you as soon as I can") could un-latch a correctly-detected voicemail and cause a rep transfer to be attempted. Google/Pixel "call assistant" screeners are now also detected.
+
+**Re-engagement first nudge timing**
+Fixed the first re-engagement nudge occasionally slipping to ~2 hours instead of the intended 1-hour cadence boundary.
+
+**Shared-number inbound routing**
+When two agents share the same phone number, an inbound reply from a contact now reliably continues the agent that originally reached out, rather than being routed by the number's default agent.
+
+</Update>

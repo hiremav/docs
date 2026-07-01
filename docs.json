@@ -4,7 +4,7 @@
   "name": "Mav",
   "description": "Mav is an AI-powered lead engagement platform that qualifies insurance leads via SMS and connects them to agents through live call transfers.",
   "colors": {
-    "primary": "#3082FF",
+    "primary": "#ff30ea",
     "light": "#EFF6FF",
     "dark": "#170834"
   },

@@ -1,22 +1,33 @@
 ---
-title: "Configuring a Mav.next Agent: Persona and Instructions"
+title: "Configuring a Mav.next Agent: Conversation Instructions and Cadence"
 sidebarTitle: "Configuring an agent"
-description: "Customize how a Mav.next agent sounds and behaves — set its persona name, override instructions, choose the default outbound channel, and duplicate agents."
+description: "Customize how a Mav.next agent sounds and behaves — layer in your own conversation instructions, tune the re-engagement cadence, choose the default outbound channel, and duplicate agents."
 ---
 
-Each agent ships with sensible defaults, but you can tune how it presents your brand and behaves. Open an agent from **Agents** and use **Persona** to edit these settings.
+Each agent ships with sensible defaults, but you can tune how it presents your brand and behaves. Open an agent from **Agents** to edit these settings.
 
-## Persona name
+## Conversation Instructions
 
-The name your agent introduces itself with (for example, “Rebecca”). It appears in the agent's greeting and throughout the conversation, so pick something that fits your brand voice.
+**Conversation Instructions** are your account's own rules for how the agent should talk — tone, what to emphasize, do's and don'ts. They sit on top of the agent's built-in qualification flow rather than replacing it: the agent still asks the right questions in the right order, but the way it sounds and what it emphasizes is shaped by what you write here.
 
-## Instructions override
+The same instructions apply everywhere the agent speaks:
 
-The agent has built-in instructions tuned for its vertical. You can layer your own guidance on top — for example, emphasizing a particular product, tone, or how to handle common questions. Your override refines the default behavior rather than replacing the agent's core qualification logic.
+- **SMS and voice** — the rules shape both channels, so a texting lead and a calling lead get the same brand voice.
+- **First-touch and re-engagement** — the rules apply to the opening conversation and to any follow-up nudges when a contact goes quiet.
+
+Leave the field blank to use the agent's default voice.
 
 <Tip>
-  Keep instruction overrides short and specific. The agent already knows how to qualify a lead — use overrides to add the things that are unique to _your_ business.
+  Keep Conversation Instructions short and specific. The agent already knows how to qualify a lead — use this field to add the things that are unique to _your_ business (a phrase to lead with, a competitor to stay graceful about, a topic to route to a human instead of answering).
 </Tip>
+
+Example:
+
+```text
+Lead with empathy and keep texts short. Never quote a price — route pricing
+questions to a licensed agent. If they mention a competitor, stay helpful,
+not defensive.
+```
 
 ## Re-engagement cadence
 
@@ -28,8 +39,8 @@ Each agent has a default channel it uses to start outbound conversations (typica
 
 ## Duplicating an agent
 
-Need a variation — say, a different team or campaign with its own persona? **Duplicate** an existing agent to copy its configuration, then adjust the persona and instructions on the copy.
+Need a variation — say, a different team or campaign with its own voice? **Duplicate** an existing agent to copy its configuration, then adjust the Conversation Instructions and cadence on the copy.
 
 <Note>
-  After changing a persona or instructions, use [Send a test](/mav-next/testing-an-agent) to hear the difference before your next live lead arrives.
+  After changing Conversation Instructions or the cadence, use [Send a test](/mav-next/testing-an-agent) to hear the difference before your next live lead arrives.
 </Note>

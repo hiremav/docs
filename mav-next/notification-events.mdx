@@ -1,0 +1,107 @@
+---
+title: "Notification Events: Mav.next Event Reference"
+sidebarTitle: "Notification events"
+description: "Complete reference for every event a Mav.next lead box can subscribe to — engagement lifecycle, phone-call lifecycle, and conversions — with the trigger for each."
+---
+
+This page lists every event you can subscribe to from a Mav.next [lead box](/mav-next/lead-boxes). Each event fires on a single contact and is delivered to the destinations subscribed on the agent working that contact.
+
+Events fall into three groups:
+
+- **Engagement lifecycle** — how a contact moves through Mav's outreach, from first message to a terminal state like opt-out or dormant.
+- **Phone-call lifecycle** — every meaningful moment of an inbound or outbound phone call, including transfers to a rep.
+- **Conversions** — the contact received a quote or purchased a policy.
+
+<Note>
+  These are the events surfaced in the **Add notification** dialog on an agent. If you're subscribing via webhook, the payload shape matches the [outbound webhooks reference](/api/outbound-webhooks).
+</Note>
+
+---
+
+## Engagement lifecycle
+
+These events track a contact's journey through Mav.next outreach.
+
+| Event | Trigger |
+|---|---|
+| `started` | Mav begins working the contact — the first outbound message is sent and the engagement is activated. Fires once per engagement. |
+| `interested` | The contact responds positively and grants permission for Mav to continue the conversation. |
+| `qualified` | The agent has collected all the qualifying details required to hand the contact to a rep. Fires once per engagement. |
+| `opted_out` | The contact opts out of messaging — either by sending STOP/an equivalent keyword, or via a carrier-enforced opt-out on the delivery receipt. Compliance-critical: stop your own outreach on this event. |
+| `dormant` | Mav exhausted its re-engagement attempts without a response and stopped actively working the contact. Reversible — an inbound message from the contact reactivates the engagement. |
+| `filtered` | An engagement was blocked at validation for a compliance or list reason — for example a blocked number, DNC, Blacklist Alliance match, or a blocked marketing source. |
+| `undeliverable` | The contact's number is unreachable — missing or invalid phone, no SMS consent, not SMS-enabled, or a carrier delivery failure. |
+
+---
+
+## Phone-call lifecycle
+
+These events cover every relevant moment of an inbound or outbound phone call between Mav, the contact, and (when transferred) your rep or support line.
+
+| Event | Trigger |
+|---|---|
+| `phone_call_scheduled` | The contact asked to be called back at a specific time and the agent scheduled a wakeup to place that call. |
+| `phone_call_started` | Mav initiates the outbound call to the contact. |
+| `phone_call_received` | The contact places an inbound call to the agent's number. |
+| `phone_call_connected` | The contact answers the call and is on the line with the agent. |
+| `phone_call_transferred` | The live call was transferred off the agent to a human. A `destination` property distinguishes a **rep** transfer (bridged to your reps per your transfer hours) from a **support** transfer (routed to Mav's support line). |
+| `phone_call_transfer_failed` | Mav attempted a hot transfer to a rep and the rep didn't answer. |
+| `phone_call_completed` | The call ended after the contact was connected — a recording and outcome are available. |
+| `phone_call_missed` | The call to the contact failed — no answer, voicemail, or the contact hung up before connecting. |
+
+<Tip>
+  Subscribe to `phone_call_transfer_failed` to alert your team the moment a warm, live contact couldn't be handed off. These are the highest-intent leads you have — a human follow-up within minutes usually recovers them.
+</Tip>
+
+---
+
+## Conversions
+
+Conversions record real business outcomes on a contact — a quote or a sale. Marking a contact **Quoted** or **Sold** from the [contact page](/mav-next/converting-a-contact) publishes the corresponding event and delivers it to any subscribed lead box.
+
+| Event | Trigger |
+|---|---|
+| `quoted` | The contact was marked as **Quoted** — they received a quote after (typically) a live conversation with a rep. |
+| `sold` | The contact was marked as **Sold** — they purchased a policy. |
+
+<Note>
+  Only **Quoted** and **Sold** are supported as conversion events on Mav.next. Custom conversion titles are legacy-only and are not published to Mav.next lead boxes.
+</Note>
+
+---
+
+## Delivery
+
+Every event you subscribe to is delivered to the destinations configured on the agent's [lead boxes](/mav-next/lead-boxes):
+
+- **Webhook** destinations receive an HTTP `POST` with a JSON body. The payload includes `activity_label` (the event name from the tables above), the contact's identifiers, and its originator data. See the full payload shape in the [outbound webhooks reference](/api/outbound-webhooks).
+- **Email** destinations receive a formatted message summarizing the event and the contact it fired on.
+
+## Example webhook payload
+
+A `qualified` event delivered to a webhook subscribed on the agent working the contact:
+
+```json
+{
+  "activity_type": "event",
+  "activity_label": "qualified",
+  "activity_note": "Contact has qualified to speak with a rep",
+  "activity_created_at": "2026-07-01T14:30:00Z",
+  "lead_id": "cnt_def456uvw",
+  "lead_first_name": "Jane",
+  "lead_last_name": "Doe",
+  "lead_email": "jane.doe@example.com",
+  "lead_opted_out": false,
+  "lead_originators": [
+    { "origin": "source_a", "key": "external-contact-id-789" }
+  ]
+}
+```
+
+---
+
+## Related pages
+
+- [Lead boxes](/mav-next/lead-boxes) — Configure which events an agent sends and where.
+- [Converting a contact](/mav-next/converting-a-contact) — How **Quoted** and **Sold** are recorded from the UI.
+- [Outbound webhooks](/api/outbound-webhooks) — Full JSON payload reference and delivery best practices.

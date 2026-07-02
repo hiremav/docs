@@ -94,7 +94,8 @@
             "icon": "share-nodes",
             "pages": [
               "mav-next/marketing-sources",
-              "mav-next/lead-boxes"
+              "mav-next/lead-boxes",
+              "mav-next/notification-events"
             ]
           },
           {

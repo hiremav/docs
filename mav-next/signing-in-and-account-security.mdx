@@ -1,0 +1,50 @@
+---
+title: "Signing In & Account Security in Mav.next"
+sidebarTitle: "Signing in & security"
+description: "Password requirements and the failed-login lockout that protect Mav.next accounts, plus what to do if a teammate is locked out."
+---
+
+Mav.next enforces a few baseline rules on every account to protect your team's data. They apply anywhere a password is set — signup, [teammate invitations](/mav-next/users-and-roles), and password reset — and to every sign-in attempt.
+
+## Password requirements
+
+Any new or updated password must:
+
+- Be at least **8 characters** long
+- Include at least one **uppercase** letter
+- Include at least one **lowercase** letter
+- Include at least one **number**
+
+These rules run whenever a password is set or changed. Accounts created before these rules were introduced can keep signing in with their existing password, but the next time they change it — including via **Forgot your password?** — the new password has to meet the requirements above.
+
+<Tip>
+  A password like `Password1` meets the minimum rules, but longer, less predictable passphrases (for example, `correct-horse-battery-9`) are much stronger. Use a password manager where you can.
+</Tip>
+
+## Login lockout
+
+To slow down brute-force attempts, Mav.next locks an account after too many failed sign-ins:
+
+- **5 consecutive failed login attempts** locks the account
+- The lock lasts **30 minutes**
+- While locked, sign-in is refused **even with the correct password**
+- A successful sign-in — or waiting out the 30-minute window — resets the counter
+
+If you enter the wrong password a few times, stop and confirm you're using the right one before trying again; each miss counts toward the lockout.
+
+## If a teammate is locked out
+
+If someone on your team can't sign in and thinks they may have hit the limit, they have two options:
+
+<Steps>
+  <Step title="Wait 30 minutes">
+    The lockout clears automatically. After the window has passed, the next sign-in attempt with the correct password will work.
+  </Step>
+  <Step title="Reset the password">
+    From the sign-in page, use **Forgot your password?** to receive a reset link by email. Setting a new password (which must meet the [requirements above](#password-requirements)) unlocks the account immediately.
+  </Step>
+</Steps>
+
+<Note>
+  Admins can't clear another user's lockout from Settings — the fastest fix is a password reset by the affected teammate.
+</Note>

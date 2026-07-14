@@ -142,5 +142,8 @@
       "x": "https://x.com/hiremav",
       "linkedin": "https://linkedin.com/company/hiremav"
     }
+  },
+  "fonts": {
+    "family": "Inter"
   }
 }

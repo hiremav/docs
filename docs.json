@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "almond",
+  "theme": "luma",
   "name": "Mav",
   "description": "Mav is an AI-powered lead engagement platform that qualifies insurance leads via SMS and connects them to agents through live call transfers.",
   "colors": {

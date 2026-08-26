@@ -1,37 +1,70 @@
 ---
-title: "Lead Boxes: Route Incoming Leads to the Right Agent"
+title: "Lead Boxes: Get Notified When Your Agent Does Something"
 sidebarTitle: "Lead boxes"
-description: "Use lead boxes in Mav.next to control which agent works incoming leads — route everything to one agent or split by source."
+description: "Subscribe an agent to Mav.next events and get them delivered to a webhook URL or an email address."
 ---
 
-A **lead box** decides which [agent](/mav-next/agents-overview) works the leads coming into your account. It's how you connect the leads flowing in from your [marketing sources](/mav-next/marketing-sources) to the agent that should handle them.
+A **lead box** is a notification subscription on a Mav.next [agent](/mav-next/agents-overview). It picks a set of events you care about — a contact getting qualified, a phone call transferring to a rep, a policy being sold — and pushes them to a **webhook URL** or an **email address** as they happen.
 
-## Routing options
+Use lead boxes to keep your CRM, dialer, or team inbox in sync with what the agent is doing, without polling.
 
-<CardGroup cols={2}>
-  <Card title="All agents" icon="users">
-    Send matching leads to your account's agents broadly — simplest when you run a single agent.
-  </Card>
+## How it works
 
-  <Card title="Specific agents" icon="user-check">
-    Direct leads to one or more chosen agents — useful when different lines of business or campaigns each have their own agent.
-  </Card>
-</CardGroup>
+Every lead box has three parts:
 
-## When to use specific routing
+- **Agent** — the agent whose activity you want to hear about. Lead boxes are per-agent, so you can subscribe different destinations to different agents.
+- **Events** — one or more events from the [event catalog](/mav-next/notification-events). Leave everything unchecked to subscribe to all external events.
+- **Destination** — either a **Webhook** (HTTPS endpoint that receives a JSON `POST`) or an **Email** address that receives a formatted message.
+
+Each event is delivered independently the moment it fires on any contact that agent is working.
+
+## Adding a notification
 
 <Steps>
-  <Step title="Multiple verticals">
-    Route auto-insurance leads to your Auto agent and home leads to your Home agent.
+  <Step title="Open the agent">
+    From **Agents**, open the agent you want to hear about.
   </Step>
-  <Step title="Campaign separation">
-    Keep a high-intent vendor's leads on a specially tuned agent, separate from the rest.
+  <Step title="Add a notification">
+    In the agent's settings, click **Add notification** to open the notification dialog.
   </Step>
-  <Step title="Team structure">
-    Mirror how your reps are organized so the right team gets the right leads.
+  <Step title="Pick events">
+    Check the events you want to receive from the [event catalog](/mav-next/notification-events). Leave them all unchecked to receive every external event.
+  </Step>
+  <Step title="Choose a destination">
+    Pick **Webhook** and enter an HTTPS endpoint (optionally with a Bearer token), or pick **Email** and enter a destination address.
+  </Step>
+  <Step title="Save">
+    Save the notification. It takes effect immediately for new activity on that agent.
   </Step>
 </Steps>
 
+You can add as many lead boxes as you need to a single agent — for example, one webhook that receives every event for your data warehouse, plus an email that only receives `sold` for your ops team.
+
+## Webhook destination
+
+Webhook deliveries are HTTP `POST` requests to your endpoint with a JSON body describing the event and the contact it happened on. The payload shape matches the [outbound webhooks reference](/api/outbound-webhooks) — `activity_type`, `activity_label`, contact identifiers, and originator data.
+
 <Note>
-  Lead boxes work hand-in-hand with marketing sources: the source tags where a lead came from, and the lead box decides which agent works it. Together they give you clean, predictable routing.
+  Endpoints must be HTTPS. Mav expects a prompt `200` response — acknowledge the payload first and process it asynchronously.
 </Note>
+
+Optional configuration:
+
+- **Encoding** — JSON (default) or form-encoded.
+- **Auth** — None or **Bearer**. When Bearer is selected, the token you provide is sent as an `Authorization: Bearer <token>` header on every delivery.
+
+## Email destination
+
+Email deliveries are formatted messages sent to a single address. Use this for team inboxes and lightweight alerting where a webhook would be overkill — for example, notifying an ops address when a contact converts to **Sold**.
+
+## Editing and removing
+
+Each notification appears as a row in the agent's settings. Use the row's edit action to change events, destination, or credentials; use delete to remove the subscription entirely. Changes take effect on the next event that fires.
+
+<Tip>
+  If you run multiple agents, add the same webhook URL to each agent you want to hear about — subscriptions are per-agent, and this is how you fan a single downstream system across the account.
+</Tip>
+
+## What you can subscribe to
+
+The events available in the notification dialog are the **external** events in Mav.next — engagement lifecycle moments, phone-call lifecycle moments, and conversions. See the full list, along with what triggers each one, in the [notification events reference](/mav-next/notification-events).

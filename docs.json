@@ -55,9 +55,7 @@
             "pages": [
               "mav-next/agents-overview",
               "mav-next/configuring-an-agent",
-              "mav-next/re-engagement",
-              "mav-next/testing-an-agent",
-              "mav-next/agent-metrics"
+              "mav-next/re-engagement"
             ]
           },
           {
@@ -111,8 +109,7 @@
             "icon": "gear",
             "pages": [
               "mav-next/account-and-transfer-hours",
-              "mav-next/users-and-roles",
-              "mav-next/signing-in-and-account-security"
+              "mav-next/users-and-roles"
             ]
           }
         ]

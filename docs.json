@@ -109,8 +109,7 @@
             "icon": "gear",
             "pages": [
               "mav-next/account-and-transfer-hours",
-              "mav-next/users-and-roles",
-              "mav-next/signing-in-and-account-security"
+              "mav-next/users-and-roles"
             ]
           }
         ]

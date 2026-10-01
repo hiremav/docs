@@ -144,5 +144,10 @@
   },
   "fonts": {
     "family": "Inter"
+  },
+  "logo": {
+    "light": "/images/mav-logo.svg",
+    "dark": "/images/Avatar-wide-dark.png",
+    "href": "https://hiremav.com"
   }
 }

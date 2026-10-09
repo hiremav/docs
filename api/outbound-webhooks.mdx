@@ -9,7 +9,7 @@ Mav's outbound API lets you subscribe to live activity from your playbooks. Ever
 This is how you keep your CRM, data warehouse, or downstream automations in sync with what Mav is doing without ever polling for updates.
 
 <Note>
-  On **Mav.next**, webhook subscriptions are configured per agent as [lead boxes](/mav-next/lead-boxes) rather than on a playbook, and the catalog of events is documented in the [notification events reference](/mav-next/notification-events). The delivery mechanics and payload shape described below are the same.
+  On **Mav.next**, you set up webhooks per agent as [lead boxes](/mav-next/lead-boxes), not on a playbook. The [notification events reference](/mav-next/notification-events) lists the events. Delivery works the same way. The payload carries a `contact` object where Classic carries a `lead` object.
 </Note>
 
 ---
@@ -34,121 +34,280 @@ You can register multiple URLs if you need to fan out activity to more than one 
 
 ## Payload Structure
 
-Both event and outcome activities POST the same set of parameters to your endpoint. The `activity_type` field tells you whether the payload represents an `event` or an `outcome`, and `activity_label` tells you exactly which one fired.
+Mav sends one `POST` for each activity. The body is a JSON object with two nested objects:
 
-### Top-Level Fields
+- `activity` describes what happened.
+- `lead` (Classic) or `contact` (Mav.next) describes the person it happened to.
 
-<ResponseField name="activity_type" type="string" required>
-  Whether this payload represents an `event` or an `outcome`.
+The fields are nested, not flat. Read the label from `activity.label`, not `activity_label`.
+
+### Activity Fields
+
+<ResponseField name="activity.type" type="string" required>
+  The kind of activity. One of `event`, `outcome`, or `conversion`.
 </ResponseField>
 
-<ResponseField name="activity_label" type="string" required>
-  The specific name of the event or outcome that fired — for example, `qualified`, `opted_out`, or `started`. See [Events](/api/events) and [Outcomes](/api/outcomes) for the full lists.
+<ResponseField name="activity.label" type="string" required>
+  The name of the activity that fired, such as `qualified`, `opted_out`, or `started`. See [Events](/api/events) and [Outcomes](/api/outcomes) for the full lists.
 </ResponseField>
 
-<ResponseField name="activity_play_id" type="string" required>
-  Mav's unique identifier for this specific play (a single lead's journey through a playbook). Use this to correlate multiple activities belonging to the same play.
+<ResponseField name="activity.play_id" type="string | null">
+  The Classic play this activity belongs to. A play is one lead's run through a playbook. This field is `null` on Mav.next.
 </ResponseField>
 
-<ResponseField name="activity_note" type="string">
-  A human-readable summary of what happened. Useful for logging and support triage.
+<ResponseField name="activity.next_engagement_id" type="string | null">
+  The Mav.next engagement this activity belongs to. This field is `null` on Classic.
 </ResponseField>
 
-<ResponseField name="activity_created_at" type="string (ISO 8601)">
-  The UTC timestamp of when the activity occurred, in ISO 8601 format (e.g., `2024-01-15T14:30:00Z`).
+<ResponseField name="activity.note" type="string">
+  A short summary of what happened.
 </ResponseField>
 
-### Lead Fields
-
-<ResponseField name="lead_id" type="string" required>
-  Mav's unique identifier for the lead.
+<ResponseField name="activity.properties" type="object">
+  Extra details that some activities carry. Often empty.
 </ResponseField>
 
-<ResponseField name="lead_first_name" type="string">
-  The lead's first name as submitted to Mav.
+<ResponseField name="activity.created_at" type="string (ISO 8601)">
+  When the activity happened, in UTC.
 </ResponseField>
 
-<ResponseField name="lead_last_name" type="string">
-  The lead's last name as submitted to Mav.
+<ResponseField name="activity.updated_at" type="string (ISO 8601)">
+  When Mav last changed the activity, in UTC.
 </ResponseField>
 
-<ResponseField name="lead_email" type="string">
+### Lead Fields (Classic)
+
+<ResponseField name="lead.id" type="string" required>
+  Mav's ID for the lead.
+</ResponseField>
+
+<ResponseField name="lead.first_name" type="string">
+  The lead's first name.
+</ResponseField>
+
+<ResponseField name="lead.last_name" type="string">
+  The lead's last name.
+</ResponseField>
+
+<ResponseField name="lead.email" type="string">
   The lead's email address.
 </ResponseField>
 
-<ResponseField name="lead_opted_out" type="boolean">
-  `true` if the lead has opted out of messaging (e.g., sent STOP). Always check this field before attempting any further outreach through your own systems.
+<ResponseField name="lead.phone" type="string">
+  The lead's phone number.
 </ResponseField>
 
-<ResponseField name="lead_created_at" type="string (ISO 8601)">
-  The UTC timestamp of when the lead was first created in Mav.
+<ResponseField name="lead.status" type="string">
+  The lead's status in Mav, such as `Stopped` or `Outcome - Qualified`.
 </ResponseField>
 
-<ResponseField name="lead_additional_info" type="array">
-  An array of key-value objects containing playbook-specific data collected on the lead. The keys correspond to your playbook's custom fields.
-
-  <Expandable title="lead_additional_info item">
-    <ResponseField name="key" type="string">
-      The field name (e.g., `current_insurance_carrier`).
-    </ResponseField>
-    <ResponseField name="value" type="string">
-      The field value collected during the playbook conversation or submitted on intake.
-    </ResponseField>
-  </Expandable>
+<ResponseField name="lead.opted_out" type="boolean">
+  `true` if the lead opted out of messages, for example by texting STOP. Check this field before you reach out through your own systems.
 </ResponseField>
 
-<ResponseField name="lead_originators" type="array">
-  An array of originator objects that identify where the lead came from. This is the same data you passed on the inbound Marketing Source call — use it to match the activity back to the lead record in your CRM or marketing platform.
+<ResponseField name="lead.created_at" type="string (ISO 8601)">
+  When Mav created the lead, in UTC.
+</ResponseField>
 
-  <Expandable title="lead_originators item">
+<ResponseField name="lead.additional_info" type="object">
+  The lead's custom fields. Any field you send on intake that Mav doesn't map lands here under the same name.
+</ResponseField>
+
+<ResponseField name="lead.originators" type="array">
+  The systems the lead came from. Every lead has a `mav` originator. A lead you create through the Leads API with an originator also carries that one.
+
+  <Expandable title="lead.originators item">
     <ResponseField name="origin" type="string">
-      The name of the originating source (e.g., the name of your Marketing Source in Mav).
+      The originating system, such as `mav`, `hubspot`, or `custom`.
     </ResponseField>
     <ResponseField name="key" type="string">
-      The unique identifier for this lead in the originating system — the value you passed as an external ID when submitting the lead.
+      The lead's ID in that system.
+    </ResponseField>
+    <ResponseField name="created_at" type="string (ISO 8601)">
+      When Mav recorded the originator, in UTC.
     </ResponseField>
   </Expandable>
 </ResponseField>
+
+<ResponseField name="lead.plays" type="array">
+  Every play run on the lead. Each play lists its own activities.
+</ResponseField>
+
+<ResponseField name="lead.playbook" type="object">
+  The playbook behind the lead's current play.
+</ResponseField>
+
+<ResponseField name="lead.referral" type="object">
+  Referral details, when the lead has them.
+</ResponseField>
+
+### Contact Fields (Mav.next)
+
+<ResponseField name="contact.id" type="string" required>
+  Mav's ID for the contact.
+</ResponseField>
+
+<ResponseField name="contact.first_name" type="string">
+  The contact's first name.
+</ResponseField>
+
+<ResponseField name="contact.last_name" type="string">
+  The contact's last name.
+</ResponseField>
+
+<ResponseField name="contact.email" type="string">
+  The contact's email address.
+</ResponseField>
+
+<ResponseField name="contact.phone" type="string">
+  The contact's phone number.
+</ResponseField>
+
+<ResponseField name="contact.opted_out" type="boolean">
+  `true` if the contact opted out of messages. Check this field before you reach out through your own systems.
+</ResponseField>
+
+<ResponseField name="contact.created_at" type="string (ISO 8601)">
+  When Mav created the contact, in UTC.
+</ResponseField>
+
+<ResponseField name="contact.additional_info" type="object">
+  The contact's custom fields. Any field you send on intake that Mav doesn't map lands here under the same name.
+</ResponseField>
+
+<ResponseField name="contact.referral" type="object">
+  Referral details, when the contact has them.
+</ResponseField>
+
+<Note>
+  Mav.next payloads have no originators. See [Matching Leads Back to Your CRM](#matching-leads-back-to-your-crm).
+</Note>
 
 ---
 
-## Example Payload
+## Example Payloads
 
-The following is a complete example of an `event` payload for a lead that has qualified:
+<CodeGroup>
 
-```json
+```json Classic
 {
-  "activity_type": "event",
-  "activity_label": "qualified",
-  "activity_play_id": "ply_abc123xyz",
-  "activity_note": "Lead has qualified to speak with a rep",
-  "activity_created_at": "2024-01-15T14:30:00Z",
-  "lead_id": "ld_def456uvw",
-  "lead_first_name": "Jane",
-  "lead_last_name": "Doe",
-  "lead_email": "jane.doe@example.com",
-  "lead_opted_out": false,
-  "lead_created_at": "2024-01-15T09:00:00Z",
-  "lead_additional_info": [
-    { "key": "current_insurance_carrier", "value": "State Farm" }
-  ],
-  "lead_originators": [
-    { "origin": "source_a", "key": "external-lead-id-789" }
-  ]
+  "activity": {
+    "type": "event",
+    "label": "qualified",
+    "play_id": "ply_abc123xyz",
+    "next_engagement_id": null,
+    "note": "Lead has qualified to speak with a rep",
+    "properties": {},
+    "created_at": "2026-01-15T14:30:00Z",
+    "updated_at": "2026-01-15T14:30:00Z"
+  },
+  "lead": {
+    "id": "lde_def456uvw",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@example.com",
+    "phone": "+15555550100",
+    "status": "Outcome - Qualified",
+    "opted_out": false,
+    "created_at": "2026-01-15T09:00:00Z",
+    "additional_info": {
+      "current_insurance_carrier": "State Farm",
+      "your_crm_id": "crm-lead-id-456"
+    },
+    "plays": [
+      {
+        "id": "ply_abc123xyz",
+        "playbook_id": "pbk_ghi789rst",
+        "playbook_name": "Auto Insurance",
+        "status": 1,
+        "runtime_settings": {},
+        "target_id": "+15555550199",
+        "source": "bandwidth",
+        "created_at": "2026-01-15T09:00:00Z",
+        "updated_at": "2026-01-15T14:30:00Z",
+        "last_message_received_at": "2026-01-15T14:29:00Z",
+        "last_messaged_at": "2026-01-15T14:28:00Z",
+        "activities": []
+      }
+    ],
+    "playbook": {
+      "id": "pbk_ghi789rst",
+      "name": "Auto Insurance",
+      "flow": "insurance_link_click",
+      "settings": {},
+      "playbook_template_id": "pbt_jkl012mno",
+      "lifecycle_stage": "lead",
+      "lead_flow_type": "real_time",
+      "updated_at": "2026-01-10T12:00:00Z"
+    },
+    "originators": [
+      { "origin": "mav", "key": "mav-key-123", "created_at": "2026-01-15T09:00:00Z" }
+    ],
+    "referral": {}
+  }
 }
 ```
+
+```json Mav.next
+{
+  "activity": {
+    "type": "event",
+    "label": "qualified",
+    "play_id": null,
+    "next_engagement_id": "neg_abc123xyz",
+    "note": "Contact has qualified to speak with a rep",
+    "properties": {},
+    "created_at": "2026-07-01T14:30:00Z",
+    "updated_at": "2026-07-01T14:30:00Z"
+  },
+  "contact": {
+    "id": "nct_def456uvw",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@example.com",
+    "phone": "+15555550100",
+    "opted_out": false,
+    "created_at": "2026-07-01T09:00:00Z",
+    "additional_info": {
+      "your_crm_id": "crm-lead-id-456"
+    },
+    "referral": {}
+  }
+}
+```
+
+</CodeGroup>
 
 ---
 
 ## Matching Leads Back to Your CRM
 
-The `lead_originators` array is the bridge between Mav and your external systems. When you submit a lead via a Marketing Source, you can include your own internal ID for that lead. Mav echoes it back in every webhook payload for that lead.
+Send your own ID for the lead as an extra field when you submit it through a Marketing Source. Mav doesn't map unknown fields, so your ID lands in `additional_info` under the same name. Every webhook for that lead carries it back.
 
-For example, if you submit a lead with `"crm_id": "crm-lead-id-456"` as a custom field, or pass it as part of a named originator, you can use the matching `key` value in every webhook to instantly look up and update the corresponding record in your system — no fuzzy matching on name or email required.
+For example, if you submit `"your_crm_id": "crm-lead-id-456"`, read it from `lead.additional_info.your_crm_id` on Classic or `contact.additional_info.your_crm_id` on Mav.next. You can then look up the record in your system without matching on name or email.
 
-<Tip>
-  If your lead source platform supports custom pass-through fields, include your internal lead ID when submitting to Mav. You'll get it back on every webhook, making CRM sync trivial.
-</Tip>
+---
+
+## Delivery
+
+### Authentication
+
+Mav supports two auth options per webhook:
+
+- **None.** Mav sends no auth header.
+- **Bearer.** Mav sends your token in an `Authorization: Bearer <token>` header.
+
+Mav doesn't support other auth headers, such as `X-Api-Key`. If your endpoint needs a key, read it from the `Authorization` header.
+
+### Responses and Retries
+
+- Mav waits 3 seconds for your endpoint to connect and 3 seconds for it to reply.
+- Any `2xx` reply counts as delivered.
+- Mav doesn't follow redirects. A `3xx` reply counts as a failure.
+- Mav retries a failed delivery up to 18 times over about four days.
+- If the last retry fails, Mav turns off the webhook and emails your account's admins and managers.
+
+Reply with `200` as soon as you receive the payload. Then process it on your side.
 
 ---
 
@@ -156,23 +315,15 @@ For example, if you submit a lead with `"crm_id": "crm-lead-id-456"` as a custom
 
 ### Use HTTPS
 
-Your webhook endpoint **must** be served over HTTPS. Mav will not deliver payloads to plain HTTP URLs. Use a valid TLS certificate from a trusted CA.
-
-### Respond Quickly with 200
-
-Mav expects your endpoint to return an HTTP `200` status code promptly. Acknowledge the receipt of the payload first, then process it asynchronously. If your endpoint takes too long to respond or returns a non-2xx status, Mav will treat the delivery as failed.
-
-<Warning>
-  If your endpoint consistently fails to respond with a 200, webhook deliveries for that subscription may be paused. Monitor your endpoint's availability and error rates.
-</Warning>
+Serve your webhook endpoint over HTTPS with a valid TLS certificate from a trusted CA. Payloads carry personal data.
 
 ### Design for Idempotency
 
-Network conditions can occasionally cause a payload to be delivered more than once. Design your handler to be idempotent — use `activity_play_id` combined with `activity_label` as a deduplication key so that processing the same payload twice doesn't create duplicate records or trigger duplicate actions.
+A retry can deliver the same payload twice. Make your handler safe to run twice on the same payload. Payloads carry no activity ID, so build a key from the person's ID, `activity.label`, and `activity.created_at`.
 
 ### Validate the Payload Shape
 
-Always validate that required fields (`activity_type`, `activity_label`, `lead_id`) are present before processing. Unknown or new activity types in the future should be handled gracefully rather than causing errors.
+Check that `activity.type`, `activity.label`, and `lead.id` or `contact.id` exist before you process a payload. Handle activity labels you don't recognize without failing. Mav adds new ones over time.
 
 ### Log Raw Payloads
 
@@ -182,6 +333,6 @@ Store the raw incoming payload before processing it. This gives you a reliable a
 
 ## Related Pages
 
-- [Event Activities](/api/events) — Full reference of every event `activity_label` Mav can fire.
-- [Outcome Activities](/api/outcomes) — Full reference of every outcome `activity_label` Mav can fire.
+- [Event Activities](/api/events) — Full reference of every event `activity.label` Mav can fire.
+- [Outcome Activities](/api/outcomes) — Full reference of every outcome `activity.label` Mav can fire.
 - [Marketing Sources API](/api/marketing-sources-api) — How to submit leads to Mav in the first place.

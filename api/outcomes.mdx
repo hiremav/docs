@@ -6,7 +6,7 @@ description: "Complete reference for every outcome activity Mav fires via webhoo
 
 Outcomes are the final verdict on a lead's journey through a Mav playbook. Where [events](/api/events) fire at moments along the way, an outcome fires once — when the playbook reaches a definitive conclusion for that lead. This could mean the lead qualified and got connected to a rep, opted out, or turned out to be unreachable. Whatever the result, the outcome is the signal your downstream systems should act on to update lead status, route to sales, suppress future outreach, or trigger reporting.
 
-Every outcome is delivered as a standard [webhook payload](/api/outbound-webhooks) with `activity_type` set to `"outcome"` and `activity_label` set to the outcome name.
+Mav delivers every outcome as a standard [webhook payload](/api/outbound-webhooks). In that payload, `activity.type` is `"outcome"` and `activity.label` is the outcome name.
 
 ---
 
@@ -61,28 +61,34 @@ These outcomes require you to suppress the lead from future outreach:
 
 ## Outcome Payload Example
 
-The following is a complete webhook payload example for the `qualified` outcome:
+This trimmed example shows a webhook payload for the `qualified` outcome. See [Outbound Webhooks](/api/outbound-webhooks) for every field.
 
 ```json
 {
-  "activity_type": "outcome",
-  "activity_label": "qualified",
-  "activity_play_id": "ply_abc123xyz",
-  "activity_note": "Lead has qualified to speak with a rep on a Party Line",
-  "activity_created_at": "2024-01-15T14:30:00Z",
-  "lead_id": "ld_def456uvw",
-  "lead_first_name": "Jane",
-  "lead_last_name": "Doe",
-  "lead_email": "jane.doe@example.com",
-  "lead_opted_out": false,
-  "lead_created_at": "2024-01-15T09:00:00Z",
-  "lead_additional_info": [
-    { "key": "current_insurance_carrier", "value": "State Farm" },
-    { "key": "credit_rating", "value": "Good" }
-  ],
-  "lead_originators": [
-    { "origin": "facebook_leads", "key": "crm-lead-id-456" }
-  ]
+  "activity": {
+    "type": "outcome",
+    "label": "qualified",
+    "play_id": "ply_abc123xyz",
+    "next_engagement_id": null,
+    "note": "Lead has qualified to speak with a rep on a Party Line",
+    "properties": {},
+    "created_at": "2026-01-15T14:30:00Z",
+    "updated_at": "2026-01-15T14:30:00Z"
+  },
+  "lead": {
+    "id": "lde_def456uvw",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@example.com",
+    "phone": "+15555550100",
+    "opted_out": false,
+    "created_at": "2026-01-15T09:00:00Z",
+    "additional_info": {
+      "current_insurance_carrier": "State Farm",
+      "credit_rating": "Good",
+      "your_crm_id": "crm-lead-id-456"
+    }
+  }
 }
 ```
 
@@ -90,22 +96,21 @@ The following is a complete webhook payload example for the `qualified` outcome:
 
 ## Updating Your CRM on Outcomes
 
-The most common integration pattern is to listen for outcome webhooks and use them to drive CRM updates. Here's a practical approach using `lead_originators` to match the lead:
+The most common integration pattern is to listen for outcome webhooks and use them to drive CRM updates. This example matches the lead by an ID you sent as an extra field on intake:
 
 ```javascript
 app.post('/mav-webhook', (req, res) => {
   res.sendStatus(200); // Acknowledge immediately
 
-  const payload = req.body;
+  const { activity, lead } = req.body;
 
   // Only act on outcomes
-  if (payload.activity_type !== 'outcome') return;
+  if (activity.type !== 'outcome') return;
 
-  // Find the lead in your CRM using the originator key
-  const originator = payload.lead_originators?.[0];
-  const crmLeadId = originator?.key;
+  // Find the lead in your CRM using the ID you sent on intake
+  const crmLeadId = lead.additional_info?.your_crm_id;
 
-  switch (payload.activity_label) {
+  switch (activity.label) {
     case 'qualified':
       crm.updateLead(crmLeadId, { status: 'Qualified', route_to_sales: true });
       break;
@@ -124,7 +129,7 @@ app.post('/mav-webhook', (req, res) => {
       crm.updateLead(crmLeadId, { status: 'Bad Number', suppress: true });
       break;
     default:
-      console.log(`Unhandled outcome: ${payload.activity_label}`);
+      console.log(`Unhandled outcome: ${activity.label}`);
   }
 });
 ```
@@ -139,4 +144,4 @@ app.post('/mav-webhook', (req, res) => {
 
 - [Event Activities](/api/events) — Milestone events that fire throughout the playbook journey.
 - [Outbound Webhooks](/api/outbound-webhooks) — Full payload reference and delivery best practices.
-- [Marketing Sources API](/api/marketing-sources-api) — Submit leads to Mav and pass originator IDs for CRM matching.
+- [Marketing Sources API](/api/marketing-sources-api) — Submit leads to Mav and pass your own ID for CRM matching.

@@ -192,10 +192,10 @@ If you are generating leads through your own web forms, integrate with [Jornaya 
 
 Once Mav receives a valid lead submission:
 
-1. **Lead is created** — Mav creates a lead record with the submitted data and assigns a unique `lead_id`.
+1. **Lead is created** — Mav creates a lead record with the submitted data and assigns it a unique ID. Webhooks carry that ID as `lead.id`.
 2. **Lead is tagged to the source** — The lead is associated with the Marketing Source, so you can track attribution and volume per source in the Mav dashboard.
 3. **Playbook starts** — Mav begins the playbook sequence for that source. The `started` event fires and is delivered to any subscribed webhook URLs.
-4. **Activity flows back to you** — As the lead progresses, Mav fires events and outcomes to your configured webhook endpoints, including the `lead_originators` data so you can match updates back to your records.
+4. **Activity flows back to you** — As the lead progresses, Mav fires events and outcomes to your configured webhook endpoints. Each webhook carries the lead's custom fields in `lead.additional_info`, so you can match updates back to your records.
 
 A successful submission returns an HTTP `200` response. If required fields are missing or the payload is malformed, the endpoint returns a `4xx` error with a description of the problem.
 
@@ -203,7 +203,7 @@ A successful submission returns an HTTP `200` response. If required fields are m
 
 ## Passing Your Own Lead ID
 
-If you want to match Mav webhook activity back to a specific record in your system, include your internal lead identifier as a custom field when submitting the lead. Mav will echo it back in the `lead_originators` array on every webhook payload.
+If you want to match Mav webhook activity back to a specific record in your system, include your internal lead identifier as a custom field when submitting the lead. Mav keeps fields it doesn't map in `additional_info` and sends them back on every webhook payload.
 
 ```json
 {
@@ -216,7 +216,7 @@ If you want to match Mav webhook activity back to a specific record in your syst
 }
 ```
 
-When Mav sends a webhook for that lead, the `lead_originators` field will contain the source name and the key value you provided, letting you do a direct lookup in your CRM without any fuzzy matching.
+When Mav sends a webhook for that lead, read your ID from `lead.additional_info.your_crm_id`. On Mav.next, read it from `contact.additional_info.your_crm_id`. You can then look up the record in your CRM without matching on name or email.
 
 ---
 

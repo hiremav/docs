@@ -42,16 +42,16 @@ You can add as many lead boxes as you need to a single agent — for example, on
 
 ## Webhook destination
 
-Webhook deliveries are HTTP `POST` requests to your endpoint with a JSON body describing the event and the contact it happened on. The payload shape matches the [outbound webhooks reference](/api/outbound-webhooks) — `activity_type`, `activity_label`, contact identifiers, and originator data.
+Webhook deliveries are HTTP `POST` requests to your endpoint with a JSON body describing the event and the contact it happened on. The body has an `activity` object and a `contact` object. The [outbound webhooks reference](/api/outbound-webhooks) lists every field.
 
 <Note>
-  Endpoints must be HTTPS. Mav expects a prompt `200` response — acknowledge the payload first and process it asynchronously.
+  Use an HTTPS endpoint. Mav waits 3 seconds for a reply and treats any `2xx` as delivered. Reply `200` first, then process the payload on your side.
 </Note>
 
 Optional configuration:
 
 - **Encoding** — JSON (default) or form-encoded.
-- **Auth** — None or **Bearer**. When Bearer is selected, the token you provide is sent as an `Authorization: Bearer <token>` header on every delivery.
+- **Auth** — None or **Bearer**. With Bearer, Mav sends your token in an `Authorization: Bearer <token>` header on every delivery. Mav doesn't support other auth headers, such as `X-Api-Key`.
 
 ## Email destination
 

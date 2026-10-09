@@ -6,7 +6,7 @@ description: "Complete reference for every event activity Mav fires via webhook 
 
 When Mav processes a lead through a playbook, it fires two categories of activity: **events** and **outcomes**. Events represent discrete moments in the conversation or playbook flow — things that happen along the way. Outcomes represent the final state of a lead's journey (see [Outcomes](/api/outcomes) for those). Understanding the distinction is important when designing your webhook integrations: you may want to act immediately on certain events (like `copilot_paused` to alert your team) while waiting for an outcome to update your CRM.
 
-Every event is delivered as a standard [webhook payload](/api/outbound-webhooks) with `activity_type` set to `"event"` and `activity_label` set to the event name.
+Mav delivers every event as a standard [webhook payload](/api/outbound-webhooks). In that payload, `activity.type` is `"event"` and `activity.label` is the event name.
 
 ---
 
@@ -84,7 +84,7 @@ Copilot events fire when the conversation requires human oversight or interventi
 
 ## Zapier-Specific Events
 
-The following events are available when using Mav's Zapier integration and may appear as `activity_label` values in webhook payloads triggered through that integration.
+The following events are available when using Mav's Zapier integration and may appear as `activity.label` values in webhook payloads triggered through that integration.
 
 | Event | Description |
 |---|---|
@@ -100,25 +100,30 @@ The following events are available when using Mav's Zapier integration and may a
 
 ## Event Payload Example
 
-The following is an example webhook payload for the `copilot_paused` event:
+This trimmed example shows a webhook payload for the `copilot_paused` event. See [Outbound Webhooks](/api/outbound-webhooks) for every field.
 
 ```json
 {
-  "activity_type": "event",
-  "activity_label": "copilot_paused",
-  "activity_play_id": "ply_abc123xyz",
-  "activity_note": "Lead requires operator review before continuing",
-  "activity_created_at": "2024-01-15T14:30:00Z",
-  "lead_id": "ld_def456uvw",
-  "lead_first_name": "Jane",
-  "lead_last_name": "Doe",
-  "lead_email": "jane.doe@example.com",
-  "lead_opted_out": false,
-  "lead_created_at": "2024-01-15T09:00:00Z",
-  "lead_additional_info": [],
-  "lead_originators": [
-    { "origin": "source_a", "key": "external-lead-id-789" }
-  ]
+  "activity": {
+    "type": "event",
+    "label": "copilot_paused",
+    "play_id": "ply_abc123xyz",
+    "next_engagement_id": null,
+    "note": "Lead requires operator review before continuing",
+    "properties": {},
+    "created_at": "2026-01-15T14:30:00Z",
+    "updated_at": "2026-01-15T14:30:00Z"
+  },
+  "lead": {
+    "id": "lde_def456uvw",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@example.com",
+    "phone": "+15555550100",
+    "opted_out": false,
+    "created_at": "2026-01-15T09:00:00Z",
+    "additional_info": {}
+  }
 }
 ```
 

@@ -27,6 +27,8 @@ These events track a contact's journey through outreach.
 | `started` | Mav begins working the contact — the first outbound message is sent and the engagement is activated. Fires once per engagement. |
 | `interested` | The contact responds positively and grants permission for Mav to continue the conversation. |
 | `qualified` | The agent has collected all the qualifying details required to hand the contact to a rep. Fires once per engagement. |
+| `not_interested` | The contact says they're not interested. Mav stops working the contact. A later inbound message from the contact resumes the engagement. |
+| `unqualified` | The contact reports a fact that disqualifies them, such as not owning a car. Mav stops working the contact. A later inbound message from the contact resumes the engagement. |
 | `opted_out` | The contact opts out of messaging — either by sending STOP/an equivalent keyword, or via a carrier-enforced opt-out on the delivery receipt. Compliance-critical: stop your own outreach on this event. |
 | `dormant` | Mav exhausted its re-engagement attempts without a response and stopped actively working the contact. Reversible — an inbound message from the contact reactivates the engagement. |
 | `filtered` | An engagement was blocked at validation for a compliance or list reason — for example a blocked number, DNC, Blacklist Alliance match, or a blocked marketing source. |
@@ -44,6 +46,7 @@ These events cover every relevant moment of an inbound or outbound phone call be
 | `phone_call_started` | Mav initiates the outbound call to the contact. |
 | `phone_call_received` | The contact places an inbound call to the agent's number. |
 | `phone_call_connected` | The contact answers the call and is on the line with the agent. |
+| `phone_call_rep_attempted` | Mav dials a rep to transfer the contact. |
 | `phone_call_transferred` | The live call was transferred off the agent to a human. A `destination` property distinguishes a **rep** transfer (bridged to your reps per your transfer hours) from a **support** transfer (routed to Mav's support line). |
 | `phone_call_transfer_failed` | Mav attempted a hot transfer to a rep and the rep didn't answer. |
 | `phone_call_completed` | The call ended after the contact was connected — a recording and outcome are available. |
@@ -57,16 +60,14 @@ These events cover every relevant moment of an inbound or outbound phone call be
 
 ## Conversions
 
-Conversions record real business outcomes on a contact — a quote or a sale. Marking a contact **Quoted** or **Sold** from the [contact page](/mav-next/converting-a-contact) publishes the corresponding event and delivers it to any subscribed lead box.
+Conversions record real business outcomes on a contact, such as a quote, a sale, or a link click. Marking a contact **Quoted** or **Sold** from the [contact page](/mav-next/converting-a-contact) publishes the corresponding event and delivers it to any subscribed lead box.
 
 | Event | Trigger |
 |---|---|
 | `quoted` | The contact was marked as **Quoted** — they received a quote after (typically) a live conversation with a rep. |
 | `sold` | The contact was marked as **Sold** — they purchased a policy. |
-
-<Note>
-  Only **Quoted** and **Sold** are supported as conversion events on Mav Next. Custom conversion titles are legacy-only and are not published to lead boxes.
-</Note>
+| `link_clicked` | The contact clicked a link Mav sent. |
+| `custom_conversion` | The contact reached a conversion your account defined. The conversion's title is in `activity.properties`. |
 
 ---
 
@@ -74,7 +75,7 @@ Conversions record real business outcomes on a contact — a quote or a sale. Ma
 
 Every event you subscribe to is delivered to the destinations configured on the agent's [lead boxes](/mav-next/lead-boxes):
 
-- **Webhook** destinations receive an HTTP `POST` with a JSON body. The payload includes `activity_label` (the event name from the tables above), the contact's identifiers, and its originator data. See the full payload shape in the [outbound webhooks reference](/api/outbound-webhooks).
+- **Webhook** destinations receive an HTTP `POST` with a JSON body. The body has an `activity` object and a `contact` object. `activity.label` holds the event name from the tables above. See the full payload shape in the [outbound webhooks reference](/api/outbound-webhooks).
 - **Email** destinations receive a formatted message summarizing the event and the contact it fired on.
 
 ## Example webhook payload
@@ -83,18 +84,29 @@ A `qualified` event delivered to a webhook subscribed on the agent working the c
 
 ```json
 {
-  "activity_type": "event",
-  "activity_label": "qualified",
-  "activity_note": "Contact has qualified to speak with a rep",
-  "activity_created_at": "2026-07-01T14:30:00Z",
-  "lead_id": "cnt_def456uvw",
-  "lead_first_name": "Jane",
-  "lead_last_name": "Doe",
-  "lead_email": "jane.doe@example.com",
-  "lead_opted_out": false,
-  "lead_originators": [
-    { "origin": "source_a", "key": "external-contact-id-789" }
-  ]
+  "activity": {
+    "type": "event",
+    "label": "qualified",
+    "play_id": null,
+    "next_engagement_id": "neg_abc123xyz",
+    "note": "Contact has qualified to speak with a rep",
+    "properties": {},
+    "created_at": "2026-07-01T14:30:00Z",
+    "updated_at": "2026-07-01T14:30:00Z"
+  },
+  "contact": {
+    "id": "nct_def456uvw",
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@example.com",
+    "phone": "+15555550100",
+    "opted_out": false,
+    "created_at": "2026-07-01T09:00:00Z",
+    "additional_info": {
+      "your_crm_id": "crm-lead-id-456"
+    },
+    "referral": {}
+  }
 }
 ```
 

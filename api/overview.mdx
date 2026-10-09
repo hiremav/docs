@@ -81,15 +81,20 @@ In your playbook settings, add one or more webhook URLs under the **Activity Sub
 
 ### Step 4 — Handle Incoming Payloads
 
-Your endpoint receives a JSON payload each time a subscribed activity occurs. Use the `lead_originators` fields to match the activity back to the original lead in your system.
+Your endpoint receives a JSON payload each time a subscribed activity occurs. If you sent your own ID as an extra field on intake, read it from `lead.additional_info` to match the activity to your record. This trimmed example shows the nesting. See [Outbound Webhooks](/api/outbound-webhooks) for every field.
 
 ```json
 {
-  "activity_type": "outcome",
-  "activity_label": "qualified",
-  "lead_originators": [
-    { "origin": "your_crm", "key": "crm-lead-id-456" }
-  ]
+  "activity": {
+    "type": "outcome",
+    "label": "qualified"
+  },
+  "lead": {
+    "id": "lde_def456uvw",
+    "additional_info": {
+      "your_crm_id": "crm-lead-id-456"
+    }
+  }
 }
 ```
 
@@ -100,7 +105,7 @@ Your endpoint receives a JSON payload each time a subscribed activity occurs. Us
 | Surface | Credential |
 |---|---|
 | Marketing Sources | The unique `postURL` itself acts as the credential. Keep it private. |
-| Outbound Webhooks | No inbound auth required — Mav posts to your URL. Secure your endpoint with HTTPS and validate the payload structure. |
+| Outbound Webhooks | Mav posts to your URL. Mav can send a token in an `Authorization: Bearer <token>` header. Serve your endpoint over HTTPS. |
 | Zapier Integration | Uses your **Mav API Key**, found in **Settings → Integrations**. |
 
 <Note>
